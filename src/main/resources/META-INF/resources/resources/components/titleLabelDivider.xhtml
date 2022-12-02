@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
+<cc:interface>
+    <cc:attribute name="labelKey" />
+    <cc:attribute name="label" default="#{empty cc.attrs.labelKey?'':msg[cc.attrs.labelKey]}" />
+    <cc:attribute name="styleClass"/>
+</cc:interface>
+<cc:implementation>
+    <h:outputStylesheet>
+        body .title-text-divider{
+            color: #495057;
+        }
+    </h:outputStylesheet>
+    <h2 class="title-text-divider col-12 #{cc.attrs.styleClass}">
+        <h:outputText value="#{cc.attrs.label}" />
+        <p:divider  styleClass="col-12 mt-0" type="solid"/>
+    </h2>
+</cc:implementation>
+</html>

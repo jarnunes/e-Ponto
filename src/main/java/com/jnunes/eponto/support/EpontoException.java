@@ -1,10 +1,12 @@
 package com.jnunes.eponto.support;
 
-import com.jnunes.core.commons.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EpontoException extends RuntimeException{
-
-    public EpontoException(String messageKey){
-        super(Utils.getMessage(messageKey));
+    private static final Logger log = LoggerFactory.getLogger(EpontoException.class);
+    public EpontoException(Exception message){
+        super(message);
+        log.error(String.valueOf(message));
     }
 }

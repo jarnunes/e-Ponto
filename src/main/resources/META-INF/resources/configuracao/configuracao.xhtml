@@ -10,6 +10,9 @@
             <p:commandButton id="saveAction" value="#{msg['save']}" icon="bi bi-check-lg" styleClass="mr-1"
                              update="panelGroup"
                              action="#{configuracaoController.save}"/>
+
+            <p:commandButton id="printAction" value="Gerar Relatório" styleClass="mr-1"
+                             action="#{configuracaoController.gerarRelatorio()}"/>
             <p:menuitem/>
         </p:toolbarGroup>
 
@@ -23,25 +26,50 @@
     </ui:define>
 
     <ui:define name="panelEdit">
+        <jn:titleLabelDivider label="Empresa" />
         <c:set var="pageTitle" value="${msg['configuracao.title']}" scope="request"/>
         <jn:inputTextLabel id="organizacao" labelKey="configuracao.organizacao" value="#{configuracaoController.form.organizacao}"
             required="true"/>
         <jn:inputTextLabel id="endereco" labelKey="configuracao.endereco" value="#{configuracaoController.form.endereco}"
             required="true"/>
-        <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{configuracaoController.form.atividade}"
-            required="true"/>
+        <jn:label id="group2" label="Logo">
+                <div id="inputgroupdd" class="ui-inputgroup">
+                    <p:fileUpload id="uploader3" mode="simple" skinSimple="true" auto="true"
+                                  value="#{configuracaoController.form.logo}"
+                                  title="my custom title" listener="#{configuracaoController.handleFileUpload}"/>
+            </div>
+        </jn:label>
+
+
+        <jn:titleLabelDivider label="Funcionario" styleClass="mt-4" />
         <jn:inputTextLabel id="funcionario" labelKey="configuracao.funcionario" value="#{configuracaoController.form.funcionario}"
             required="true"/>
         <jn:inputTextLabel id="funcao" labelKey="configuracao.funcao" value="#{configuracaoController.form.funcao}"
             required="true"/>
-
-        <jn:label id="group" label="Logo">
+        <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{configuracaoController.form.atividade}"
+            required="true"/>
+        <jn:label id="group" label="Assinatura">
             <div class="ui-inputgroup">
                 <p:fileUpload listener="#{configuracaoController.handleFileUpload}" mode="simple" skinSimple="true"
                               label="Carregar" auto="true" chooseIcon="pi pi-upload"
-                style="width: 100%; !important;"/>
+                              style="width: 100%; !important;"/>
             </div>
         </jn:label>
 
+
+        <h:outputStylesheet>
+            body .ui-inputgroup > .ui-widget, body .ui-inputgroup > .ui-float-label > .ui-widget {
+                border-radius: 5px;
+                background: #efefef;
+                border: 1px solid #ced4da;
+                width: 100%;
+            }
+
+            .ui-fileupload-simple .ui-button {
+                overflow: hidden;
+                height: 100%;
+                border-radius: 5px 0 0 5px;
+            }
+        </h:outputStylesheet>
     </ui:define>
 </ui:composition>
