@@ -1,5 +1,7 @@
-package com.jnunes.crudveiculos.controller;
+package com.jnunes.eponto.controller;
 
+import com.jnunes.core.domain.BaseEntity;
+import com.jnunes.springjsf.controller.BaseControllerJSF;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,8 +12,7 @@ import java.io.Serializable;
 
 @Named
 @ViewScoped
-public class VeiculoController implements Serializable {
-
+public class ConsultaController extends BaseControllerJSF<BaseEntity> implements Serializable {
 
     @Getter
     @Setter
@@ -22,5 +23,11 @@ public class VeiculoController implements Serializable {
         searchValue = "Jaé";
     }
 
+    @Override
+    public void search() {
+    }
 
+    @Override
+    public void setEditEntity() {
+    }
 }

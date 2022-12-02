@@ -1,4 +1,4 @@
-package com.jnunes.crudveiculos.controller;
+package com.jnunes.eponto.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
