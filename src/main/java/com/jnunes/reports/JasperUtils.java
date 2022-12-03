@@ -12,9 +12,16 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class JasperUtils {
+
+    private static final String REPORTS_PATH = "reports/";
+    private static final String REPORTS_TYPE = ".jrxml";
+
+    protected static JRBeanCollectionDataSource dataSource =
+            new JRBeanCollectionDataSource(Collections.singletonList(new Object()));
 
     public static ResponseEntity<byte[]> getResponseEntity(Map<String, Object> params, String templateName,
         String fileName) {
@@ -34,19 +41,23 @@ public class JasperUtils {
     public static JasperPrint getJasperPrint(Map<String, Object> params, String templateName) {
         try {
             JasperReport jasperReport = getJasperReport(templateName);
-            return JasperFillManager.fillReport(jasperReport, params, getDummyDatasource());
+            return JasperFillManager.fillReport(jasperReport, params, dataSource);
         } catch (FileNotFoundException | JRException e) {
             throw new EpontoException(e);
         }
     }
 
-    private static JasperReport getJasperReport(final String templateName) throws FileNotFoundException, JRException {
-        File template = ResourceUtils.getFile("classpath:" + templateName + ".jrxml");
+    protected static JasperReport getJasperReport(final String templateName) throws FileNotFoundException, JRException {
+        File template = ResourceUtils.getFile("classpath:" + REPORTS_PATH + templateName + REPORTS_TYPE);
         return JasperCompileManager.compileReport(template.getAbsolutePath());
     }
 
-    private static JRDataSource getDummyDatasource() {
-        return new JRBeanCollectionDataSource(Collections.singletonList(new Object()));
+    protected static JRDataSource getDatasource() {
+        return getCollectionDataSource(Collections.singletonList(new Object()));
+    }
+
+    protected static JRBeanCollectionDataSource getCollectionDataSource(List<Object> items) {
+        return new JRBeanCollectionDataSource(items);
     }
 
 }

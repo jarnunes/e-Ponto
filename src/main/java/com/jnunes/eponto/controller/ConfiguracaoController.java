@@ -3,7 +3,6 @@ package com.jnunes.eponto.controller;
 import com.jnunes.eponto.domain.Configuracao;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.reports.RelatorioEponto;
-import com.jnunes.reports.ReportService;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.event.FileUploadEvent;
@@ -33,8 +32,13 @@ public class ConfiguracaoController implements Serializable {
         form = service.obterConfiguracao();
     }
 
-    public void handleFileUpload(FileUploadEvent event) {
+    public void handleLogoUpload(FileUploadEvent event) {
         form.setLogo(event.getFile().getContent());
+        FacesMessage message = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
+        FacesContext.getCurrentInstance().addMessage(null, message);
+    }
+    public void handleAssinaturaUpload(FileUploadEvent event) {
+        form.setAssinatura(event.getFile().getContent());
         FacesMessage message = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
@@ -46,8 +50,8 @@ public class ConfiguracaoController implements Serializable {
     }
 
     public ResponseEntity<byte[]> gerarRelatorio() {
-        ResponseEntity<byte[]> rs = RelatorioEponto.obterRelatorio(form);
+        //ResponseEntity<byte[]> rs = RelatorioEponto.obterRelatorio(form);
         String tmp = "Gerou";
-        return rs;
+        return null;
     }
 }

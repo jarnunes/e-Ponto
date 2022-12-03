@@ -35,8 +35,7 @@
         <jn:label id="group2" label="Logo">
                 <div id="inputgroupdd" class="ui-inputgroup">
                     <p:fileUpload id="uploader3" mode="simple" skinSimple="true" auto="true"
-                                  value="#{configuracaoController.form.logo}"
-                                  title="my custom title" listener="#{configuracaoController.handleFileUpload}"/>
+                                  title="my custom title" listener="#{configuracaoController.handleLogoUpload}"/>
             </div>
         </jn:label>
 
@@ -50,7 +49,7 @@
             required="true"/>
         <jn:label id="group" label="Assinatura">
             <div class="ui-inputgroup">
-                <p:fileUpload listener="#{configuracaoController.handleFileUpload}" mode="simple" skinSimple="true"
+                <p:fileUpload listener="#{configuracaoController.handleAssinaturaUpload}" mode="simple" skinSimple="true"
                               label="Carregar" auto="true" chooseIcon="pi pi-upload"
                               style="width: 100%; !important;"/>
             </div>
