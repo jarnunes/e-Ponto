@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -27,6 +28,18 @@ public class Configuracao extends BaseEntity {
 
     @Column(nullable = false)
     private String funcao;
+
+    @Column(nullable = false)
+    private LocalTime inicioExpediente;
+
+    @Column(nullable = false)
+    private LocalTime fimExpediente;
+
+    @Column(nullable = false)
+    private LocalTime inicioIntervalo;
+
+    @Column(nullable = false)
+    private LocalTime fimIntervalo;
 
     @Lob
     @Column(columnDefinition = "BLOB")

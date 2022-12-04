@@ -40,6 +40,7 @@
         </jn:label>
 
 
+        <!-- Funcionário -->
         <jn:titleLabelDivider label="Funcionario" styleClass="mt-4" />
         <jn:inputTextLabel id="funcionario" labelKey="configuracao.funcionario" value="#{configuracaoController.form.funcionario}"
             required="true"/>
@@ -47,11 +48,19 @@
             required="true"/>
         <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{configuracaoController.form.atividade}"
             required="true"/>
+        <jn:timeLabelMessage id="inicioExpediente" label="Início Expediente" value="#{configuracaoController.form.inicioExpediente}" />
+
+        <jn:timeLabelMessage id="fimExpediente" label="Fim Expediente" value="#{configuracaoController.form.fimExpediente}" />
+
+        <jn:timeLabelMessage id="inicioIntervalo" label="Início Intervalo" value="#{configuracaoController.form.inicioIntervalo}" />
+        <jn:timeLabelMessage id="fimIntervalo" label="Fim Intervalo" value="#{configuracaoController.form.fimIntervalo}" />
+
         <jn:label id="group" label="Assinatura">
             <div class="ui-inputgroup">
                 <p:fileUpload listener="#{configuracaoController.handleAssinaturaUpload}" mode="simple" skinSimple="true"
                               label="Carregar" auto="true" chooseIcon="pi pi-upload"
-                              style="width: 100%; !important;"/>
+                              style="width: 100%; !important;">
+                </p:fileUpload>
             </div>
         </jn:label>
 

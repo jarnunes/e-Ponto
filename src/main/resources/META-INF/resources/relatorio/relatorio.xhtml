@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/templates/template-crud.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
+
+    <ui:param name="controller" value="#{relatorioController}"/>
+    <ui:define name="toolbar">
+        <p:toolbarGroup id="toolbarGroup">
+            <p:commandButton id="continuar" value="Gerar Relatório" styleClass="mr-1"
+                             action="#{relatorioController.continuar()}"
+                             rendered="#{empty relatorioController.localDate}"
+                             update="@form"/>
+
+            <p:commandButton id="save" value="Salvar" styleClass="mr-1"
+                             action="#{relatorioController.salvarRelatorio()}"
+                             rendered="#{not empty relatorioController.localDate}"/>
+
+
+        </p:toolbarGroup>
+        <h:outputStylesheet>
+            body .ui-toolbar {
+                border: transparent !important;
+                background: transparent !important;
+            }
+        </h:outputStylesheet>
+
+    </ui:define>
+
+    <ui:define name="panelEdit">
+        <c:set var="pageTitle" value="${msg['relatorio.title']}" scope="request"/>
+
+        <h:panelGroup id="dataSelect" rendered="#{empty relatorioController.localDate}">
+            <p:datePicker id="data" value="#{relatorioController.localDate}" pattern="MM/yyyy"
+                          styleClass="time-label">
+            </p:datePicker>
+        </h:panelGroup>
+
+        <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.localDate}">
+            <p:dataTable var="diaTrabalho" value="#{relatorioController.diasTrabalho}">
+                <p:column headerText="Dia" style="width: 20px">
+                    <h:outputText value="#{help.toDay(diaTrabalho.dia)}" />
+                </p:column>
+
+                <p:column headerText="Entrada" style="width: 70px">
+                    <h:outputText value="#{diaTrabalho.horaEntrada}" />
+                </p:column>
+
+                <p:column headerText="Inícios" style="width: 70px">
+                    <h:outputText value="#{diaTrabalho.inicioIntervalo}" />
+                </p:column>
+
+                <p:column headerText="Fim" style="width: 70px">
+                    <h:outputText value="#{diaTrabalho.fimIntervalo}" />
+                </p:column>
+
+                <p:column headerText="Saída" style="width: 70px">
+                    <h:outputText value="#{diaTrabalho.horaSaida}" />
+                </p:column>
+
+                <p:column headerText="Débito" style="width: 70px">
+                    <h:outputText value="#{diaTrabalho.debito}" />
+                </p:column>
+
+                <p:column headerText="Crédito" style="width: 70px">
+                    <h:outputText value="#{diaTrabalho.credito}" />
+                </p:column>
+                <p:column headerText="Observação">
+                    <h:outputText value="#{diaTrabalho.observacao}" />
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>
+
+    </ui:define>
+</ui:composition>

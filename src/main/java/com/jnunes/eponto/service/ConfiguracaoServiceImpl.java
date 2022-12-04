@@ -15,9 +15,9 @@ public class ConfiguracaoServiceImpl extends BaseServiceImpl<Configuracao> imple
     private ConfiguracaoRepository repository;
 
     @Override
-    public void save(Configuracao entity) {
+    public Configuracao save(Configuracao entity) {
         entity.setId(ENTITY_ID);
-        repository.save(entity);
+        return repository.save(entity);
     }
 
     @Override

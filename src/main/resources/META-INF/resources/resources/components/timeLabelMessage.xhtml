@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
+<cc:interface>
+    <cc:attribute name="labelKey" />
+    <cc:attribute name="label" default="#{empty cc.attrs.labelKey?'':msg[cc.attrs.labelKey]}" />
+    <cc:attribute name="styleClass" default="col-12 md:col-6 lg:col-4" />
+    <cc:attribute name="required" />
+    <cc:attribute name="rendered" />
+    <cc:attribute name="value" />
+    <cc:attribute name="disabled" />
+    <cc:attribute name="id" required="true"/>
+    <cc:attribute name="gridClass"/>
+
+</cc:interface>
+<cc:implementation>
+    <h:outputStylesheet>
+        .p-datepicker, body .time-label input{
+            width: 100% ;
+        }
+    </h:outputStylesheet>
+
+    <jn:label id="timeLabel" required="#{cc.attrs.required}" label="#{cc.attrs.label}" labelKey="#{cc.attrs.labelKey}" rendered="#{cc.attrs.rendered}" gridClass="#{cc.attrs.gridClass}" >
+        <p:datePicker id="#{cc.attrs.id}" value="#{cc.attrs.value}" timeOnly="true" pattern="HH:mm"
+            styleClass="time-label">
+            <p:ajax process="@this" />
+        </p:datePicker>
+    </jn:label>
+</cc:implementation>
+</html>
