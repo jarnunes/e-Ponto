@@ -2,10 +2,12 @@ package com.jnunes.reports;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jnunes.core.commons.context.StaticContextAccessor;
+import com.jnunes.eponto.domain.Configuracao;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.reports.vo.DiaTrabalhoVO;
 import com.jnunes.reports.vo.RelatorioVO;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.primefaces.model.StreamedContent;
 import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayInputStream;
@@ -32,6 +34,17 @@ public class RelatorioEponto extends JasperUtils {
         return getResponseEntity(empParams, TEMPLATE_EPONTO, getFileName());
     }
 
+    public static StreamedContent obterRelatorioStreamedContent(RelatorioVO relatorio, List<DiaTrabalhoVO> diasTrabalho) {
+        dataSource = getCollectionDataSource(Collections.singletonList(new Object()));
+        Map<String, Object> empParams = getParametros(relatorio, diasTrabalho);
+        return getStreamedContent(empParams, TEMPLATE_EPONTO, getFileName());
+    }
+    public static void salvarRelatorio (RelatorioVO relatorio, List<DiaTrabalhoVO> diasTrabalho) {
+        dataSource = getCollectionDataSource(Collections.singletonList(new Object()));
+        Map<String, Object> empParams = getParametros(relatorio, diasTrabalho);
+        salvarArquivoEmDiretorio(empParams, TEMPLATE_EPONTO, getFileName(),
+            getConfiguracaoService().obterConfiguracao().getDiretorioDownload());
+    }
     private static String getFileName() {
         return PREFIXO_NOME_ARQUIVO + LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
     }

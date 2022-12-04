@@ -6,12 +6,19 @@ import com.jnunes.eponto.domain.DiaTrabalho;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.eponto.service.RelatorioServiceImpl;
 import com.jnunes.eponto.support.JornadaTrabalhoUtils;
+import com.jnunes.reports.RelatorioEponto;
+import com.jnunes.reports.vo.DiaTrabalhoVO;
+import com.jnunes.reports.vo.RelatorioVO;
 import com.jnunes.springjsf.support.utils.JSFUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.CellEditEvent;
+import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -21,6 +28,8 @@ import java.time.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -126,10 +135,33 @@ public class RelatorioController implements Serializable {
                 DayOfWeek.SUNDAY.name() : localDate.toString();
     }
 
-    public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
+    public void onCellEdit(DiaTrabalho diaTrabalho) {
+        diaTrabalho.setCredito(JornadaTrabalhoUtils.calcularCreditoDiario(diaTrabalho));
     }
+    public void emitirRelatorio() {
+        if (CollectionUtils.isNotEmpty(diasTrabalho)) {
+            RelatorioVO vo = criarEstruturaBaseRelatorio();
+            setInformacoesComplementares(vo, Objects.requireNonNull(diasTrabalho.stream().findFirst().orElse(null)));
+            RelatorioEponto.salvarRelatorio(vo, diasTrabalho.stream().map(DiaTrabalhoVO::new).collect(Collectors.toList()));
+        }
+    }
+
+    private RelatorioVO criarEstruturaBaseRelatorio() {
+        RelatorioVO vo = new RelatorioVO();
+        vo.setEmpresa(configuracao.getOrganizacao());
+        vo.setEndereco(configuracao.getEndereco());
+        vo.setAtividade(StringUtils.trimToEmpty(configuracao.getAtividade()));
+        vo.setNomeFuncionario(configuracao.getFuncionario());
+        vo.setLogomarca(configuracao.getLogo());
+        vo.setAssinatura(configuracao.getAssinatura());
+        vo.setCargo(StringUtils.trimToEmpty(configuracao.getFuncao()));
+        return vo;
+    }
+
+    private void setInformacoesComplementares(RelatorioVO relatorio, DiaTrabalho diaTrabalho) {
+        relatorio.setDataReferencia(diaTrabalho.getDia().getMonth().name() + "/" + diaTrabalho.getDia().getYear());
+    }
+
 
     @Getter
     @Setter

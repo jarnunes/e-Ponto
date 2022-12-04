@@ -17,6 +17,11 @@
                              rendered="#{relatorioController.editMode}"/>
             <p:commandButton id="save" value="Salvar" styleClass="mr-1" action="#{relatorioController.salvarRelatorio()}"
                              rendered="#{relatorioController.editMode}"/>
+            <p:commandButton id="emitirRelatorio" value="Emitir Relatório" styleClass="mr-1"
+                             icon="bi bi-file-earmark-text"
+                             rendered="#{relatorioController.editMode}">
+                <p:fileDownload value="#{relatorioController.emitirRelatorio()}"  />
+            </p:commandButton>
         </p:toolbarGroup>
     </ui:define>
 
@@ -84,8 +89,6 @@
             <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.diasTrabalho}"
             editMode="cell" editable="true" widgetVar="diasTrabalho">
 
-                <p:ajax event="cellEdit" listener="#{relatorioController.onCellEdit}" />
-
                 <p:column headerText="Dia" style="width: 20px">
                     <h:outputText value="#{help.toDay(dia.dia)}"/>
                 </p:column>
@@ -96,7 +99,9 @@
                             <h:outputText value="#{dia.horaEntrada}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:datePicker value="#{dia.horaEntrada}" timeOnly="true" pattern="HH:mm" />
+                            <p:datePicker value="#{dia.horaEntrada}" timeOnly="true" pattern="HH:mm">
+                                <p:ajax listener="#{relatorioController.onCellEdit(dia)}" update="form:datatableDiasTrabalho" />
+                            </p:datePicker>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -107,7 +112,9 @@
                             <h:outputText value="#{dia.inicioIntervalo}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:datePicker value="#{dia.inicioIntervalo}" timeOnly="true" pattern="HH:mm" />
+                            <p:datePicker value="#{dia.inicioIntervalo}" timeOnly="true" pattern="HH:mm" >
+                                <p:ajax listener="#{relatorioController.onCellEdit(dia)}" update="form:datatableDiasTrabalho" />
+                            </p:datePicker>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -118,7 +125,9 @@
                             <h:outputText value="#{dia.fimIntervalo}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:datePicker value="#{dia.fimIntervalo}" timeOnly="true" pattern="HH:mm" />
+                            <p:datePicker value="#{dia.fimIntervalo}" timeOnly="true" pattern="HH:mm" >
+                                <p:ajax listener="#{relatorioController.onCellEdit(dia)}" update="form:datatableDiasTrabalho" />
+                            </p:datePicker>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -129,7 +138,9 @@
                             <h:outputText value="#{dia.horaSaida}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:datePicker value="#{dia.horaSaida}" timeOnly="true" pattern="HH:mm" />
+                            <p:datePicker value="#{dia.horaSaida}" timeOnly="true" pattern="HH:mm" >
+                                <p:ajax listener="#{relatorioController.onCellEdit(dia)}" update="form:datatableDiasTrabalho" />
+                            </p:datePicker>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
@@ -140,7 +151,7 @@
                             <h:outputText value="#{dia.credito}"/>
                         </f:facet>
                         <f:facet name="input">
-                            <p:inputNumber value="#{dia.credito}" />
+                            <p:inputNumber value="#{dia.credito}" decimalPlaces="2" />
                         </f:facet>
                     </p:cellEditor>
                 </p:column>

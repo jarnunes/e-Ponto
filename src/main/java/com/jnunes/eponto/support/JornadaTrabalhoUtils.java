@@ -14,9 +14,14 @@ public class JornadaTrabalhoUtils {
         return StaticContextAccessor.getBean(ConfiguracaoServiceImpl.class);
     }
 
-    public static Duration jornadaDiaria() {
+    public static Duration getConfiguracaoJornadaDiaria() {
         Configuracao configuracao = getConfiguracaoService().obterConfiguracao();
         return Duration.between(configuracao.getInicioExpediente(), configuracao.getFimExpediente());
+    }
+
+    public static Duration getConfiguracaoIntervaloDiaria() {
+        Configuracao configuracao = getConfiguracaoService().obterConfiguracao();
+        return Duration.between(configuracao.getInicioIntervalo(), configuracao.getFimIntervalo());
     }
 
     public static Double calcularTotalCreditoDeDiasTrabalhados(List<DiaTrabalho> diasTrabalho) {
@@ -35,12 +40,18 @@ public class JornadaTrabalhoUtils {
         return Duration.between(diaTrabalho.getHoraEntrada(), diaTrabalho.getHoraSaida());
     }
 
+    public static Duration getDuracaoIntevaloDiaria(DiaTrabalho diaTrabalho) {
+        return Duration.between(diaTrabalho.getInicioIntervalo(), diaTrabalho.getFimIntervalo());
+    }
+
     public static Double calcularCreditoDiario(DiaTrabalho diaTrabalho) {
         return toHoraMinutoDouble(getCreditoDiario(diaTrabalho));
     }
 
     private static Duration getCreditoDiario(DiaTrabalho diaTrabalho) {
-        return getDuracaoTrabalhoDiaria(diaTrabalho).minus(jornadaDiaria());
+        Duration creditoDiario = getDuracaoTrabalhoDiaria(diaTrabalho).minus(getConfiguracaoJornadaDiaria());
+        Duration creditoIntervalo = getConfiguracaoIntervaloDiaria().minus(getDuracaoIntevaloDiaria(diaTrabalho));
+        return creditoDiario.plus(creditoIntervalo);
     }
 
     private static Double toHoraMinutoDouble(Duration duration) {

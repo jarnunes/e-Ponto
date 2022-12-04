@@ -7,27 +7,22 @@ import com.jnunes.eponto.service.RelatorioServiceImpl;
 import com.jnunes.reports.RelatorioEponto;
 import com.jnunes.reports.vo.DiaTrabalhoVO;
 import com.jnunes.reports.vo.RelatorioVO;
-import com.sun.faces.util.CollectionsUtils;
-import net.bytebuddy.asm.Advice;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-@RestController
-public class TesteController {
+@org.springframework.web.bind.annotation.RestController
+public class RestController {
 
     @Autowired
     private ConfiguracaoService service;

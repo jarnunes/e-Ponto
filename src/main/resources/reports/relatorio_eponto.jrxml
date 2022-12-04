@@ -14,7 +14,6 @@
 		<field name="saida" class="java.lang.String"/>
 		<field name="inicioIntervalo" class="java.lang.String"/>
 		<field name="fimIntervalo" class="java.lang.String"/>
-		<field name="debito" class="java.lang.String"/>
 		<field name="credito" class="java.lang.String"/>
 		<field name="observacao" class="java.lang.String"/>
 	</subDataset>
@@ -340,32 +339,8 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="60" uuid="4df98cf6-08f4-4477-8f7f-00055d630b9d">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
-						<jr:columnHeader height="20" rowSpan="1">
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<box>
-								<pen lineWidth="0.25"/>
-							</box>
-							<staticText>
-								<reportElement mode="Opaque" x="0" y="0" width="60" height="20" backcolor="#C9C9C9" uuid="9feb2579-8ecf-49e5-8f7c-46553e695f72"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[DÉBITO]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:detailCell height="20">
-							<box>
-								<pen lineWidth="0.075"/>
-							</box>
-							<textField>
-								<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="60" height="20" backcolor="#FFFFFF" uuid="6315fe9e-03f7-458d-a5c0-e26728386455"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{debito}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
 					<jr:column width="60" uuid="c35f4531-9b8f-4a32-b58a-9507365c0865">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
 						<jr:columnHeader height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<box>
@@ -388,14 +363,14 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="180" uuid="104d135e-e7b8-4943-86b2-51cd65130ba0">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+					<jr:column width="240" uuid="104d135e-e7b8-4943-86b2-51cd65130ba0">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
 						<jr:columnHeader height="20" rowSpan="1">
 							<box>
 								<pen lineWidth="0.25"/>
 							</box>
 							<staticText>
-								<reportElement mode="Opaque" x="0" y="0" width="180" height="20" backcolor="#C9C9C9" uuid="59df9283-e6a8-47f3-b5a3-adbeff7e032d"/>
+								<reportElement mode="Opaque" x="0" y="0" width="240" height="20" backcolor="#C9C9C9" uuid="59df9283-e6a8-47f3-b5a3-adbeff7e032d"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<text><![CDATA[OBSERVAÇÃO]]></text>
 							</staticText>
@@ -405,7 +380,7 @@
 								<pen lineWidth="0.075"/>
 							</box>
 							<textField>
-								<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="180" height="20" backcolor="#FFFFFF" uuid="b5b2c46c-6665-4401-9a43-0dad2e82d9b8"/>
+								<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="240" height="20" backcolor="#FFFFFF" uuid="b5b2c46c-6665-4401-9a43-0dad2e82d9b8"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{observacao}]]></textFieldExpression>
 							</textField>

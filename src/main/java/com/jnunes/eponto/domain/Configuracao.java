@@ -48,4 +48,7 @@ public class Configuracao extends BaseEntity {
     @Lob
     @Column(columnDefinition = "BLOB")
     private byte[] assinatura;
+
+    @Column(nullable = false)
+    private String diretorioDownload;
 }
