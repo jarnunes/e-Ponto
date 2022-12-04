@@ -1,7 +1,8 @@
 package com.jnunes.reports;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jnunes.eponto.domain.DiaTrabalho;
+import com.jnunes.core.commons.context.StaticContextAccessor;
+import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.reports.vo.DiaTrabalhoVO;
 import com.jnunes.reports.vo.RelatorioVO;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collections;
@@ -21,6 +21,10 @@ public class RelatorioEponto extends JasperUtils {
 
     private static final String TEMPLATE_EPONTO = "relatorio_eponto";
     private static final String PREFIXO_NOME_ARQUIVO = "relatorio_";
+
+    private static ConfiguracaoServiceImpl getConfiguracaoService(){
+        return StaticContextAccessor.getBean(ConfiguracaoServiceImpl.class);
+    }
 
     public static ResponseEntity<byte[]> obterRelatorio(RelatorioVO relatorio, List<DiaTrabalhoVO> diasTrabalho) {
         dataSource = getCollectionDataSource(Collections.singletonList(new Object()));
@@ -48,6 +52,5 @@ public class RelatorioEponto extends JasperUtils {
     private static InputStream toInputStream(byte[] content) {
         return Optional.ofNullable(content).map(ByteArrayInputStream::new).orElse(null);
     }
-
 
 }

@@ -2,12 +2,13 @@ package com.jnunes.eponto.controller;
 
 import com.jnunes.eponto.domain.Configuracao;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
-import com.jnunes.reports.RelatorioEponto;
+import com.jnunes.springjsf.controller.BaseController;
+import com.jnunes.springjsf.support.utils.JSFUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.file.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -18,7 +19,7 @@ import java.io.Serializable;
 
 @Named
 @ViewScoped
-public class ConfiguracaoController implements Serializable {
+public class ConfiguracaoController extends BaseController<Configuracao> {
 
     @Autowired
     private ConfiguracaoServiceImpl service;
@@ -28,30 +29,23 @@ public class ConfiguracaoController implements Serializable {
     private Configuracao form;
 
     @PostConstruct
-    public void postConstruct() {
-        form = service.obterConfiguracao();
+    public void init() {
+        setEditForm(service.obterConfiguracao());
+        setSearchForm(new SearchForm());
+        editOnLoad();
     }
 
     public void handleLogoUpload(FileUploadEvent event) {
         form.setLogo(event.getFile().getContent());
-        FacesMessage message = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        addUploadSuccessMessage(event.getFile());
     }
+
     public void handleAssinaturaUpload(FileUploadEvent event) {
         form.setAssinatura(event.getFile().getContent());
-        FacesMessage message = new FacesMessage("Successful", event.getFile().getFileName() + " is uploaded.");
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        addUploadSuccessMessage(event.getFile());
     }
 
-    public void save() {
-        service.save(form);
-        FacesMessage message = new FacesMessage("Successful", "Configuração salva com sucesso");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
-
-    public ResponseEntity<byte[]> gerarRelatorio() {
-        //ResponseEntity<byte[]> rs = RelatorioEponto.obterRelatorio(form);
-        String tmp = "Gerou";
-        return null;
+    private void addUploadSuccessMessage(UploadedFile file){
+        JSFUtils.addInfoMessage("upload.success", file.getFileName());
     }
 }

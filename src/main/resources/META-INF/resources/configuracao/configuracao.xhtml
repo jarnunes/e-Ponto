@@ -3,57 +3,47 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
-
+    <!--@elvariable id="form" type="com.jnunes.eponto.domain.Configuracao"-->
     <ui:param name="controller" value="#{configuracaoController}" />
     <ui:define name="toolbar">
         <p:toolbarGroup id="toolbarGroup">
             <p:commandButton id="saveAction" value="#{msg['save']}" icon="bi bi-check-lg" styleClass="mr-1"
-                             update="panelGroup"
-                             action="#{configuracaoController.save}"/>
-
-            <p:commandButton id="printAction" value="Gerar Relatório" styleClass="mr-1"
-                             action="#{configuracaoController.gerarRelatorio()}"/>
+                             update="@form" process="@form" action="#{configuracaoController.saveAndKeepEditing()}"/>
             <p:menuitem/>
         </p:toolbarGroup>
-
-        <h:outputStylesheet>
-            body .ui-toolbar{
-                border: transparent !important;
-                background: transparent !important;
-            }
-        </h:outputStylesheet>
-
     </ui:define>
 
-    <ui:define name="panelEdit">
+    <ui:define name="editPanel">
         <jn:titleLabelDivider label="Empresa" />
         <c:set var="pageTitle" value="${msg['configuracao.title']}" scope="request"/>
-        <jn:inputTextLabel id="organizacao" labelKey="configuracao.organizacao" value="#{configuracaoController.form.organizacao}"
+        <c:set var="form" value="#{configuracaoController.editForm}" scope="request"/>
+
+        <jn:inputTextLabel id="organizacao" labelKey="configuracao.organizacao" value="#{configuracaoController.editForm.organizacao}"
             required="true"/>
-        <jn:inputTextLabel id="endereco" labelKey="configuracao.endereco" value="#{configuracaoController.form.endereco}"
+        <jn:inputTextLabel id="endereco" labelKey="configuracao.endereco" value="#{form.endereco}"
             required="true"/>
         <jn:label id="group2" label="Logo">
                 <div id="inputgroupdd" class="ui-inputgroup">
                     <p:fileUpload id="uploader3" mode="simple" skinSimple="true" auto="true"
-                                  title="my custom title" listener="#{configuracaoController.handleLogoUpload}"/>
+                        title="my custom title" listener="#{configuracaoController.handleLogoUpload}"/>
             </div>
         </jn:label>
 
 
         <!-- Funcionário -->
         <jn:titleLabelDivider label="Funcionario" styleClass="mt-4" />
-        <jn:inputTextLabel id="funcionario" labelKey="configuracao.funcionario" value="#{configuracaoController.form.funcionario}"
+        <jn:inputTextLabel id="funcionario" labelKey="configuracao.funcionario" value="#{form.funcionario}"
             required="true"/>
-        <jn:inputTextLabel id="funcao" labelKey="configuracao.funcao" value="#{configuracaoController.form.funcao}"
+        <jn:inputTextLabel id="funcao" labelKey="configuracao.funcao" value="#{form.funcao}"
             required="true"/>
-        <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{configuracaoController.form.atividade}"
+        <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{form.atividade}"
             required="true"/>
-        <jn:timeLabelMessage id="inicioExpediente" label="Início Expediente" value="#{configuracaoController.form.inicioExpediente}" />
+        <jn:timeLabelMessage id="inicioExpediente" label="Início Expediente" value="#{form.inicioExpediente}" />
 
-        <jn:timeLabelMessage id="fimExpediente" label="Fim Expediente" value="#{configuracaoController.form.fimExpediente}" />
+        <jn:timeLabelMessage id="fimExpediente" label="Fim Expediente" value="#{form.fimExpediente}" />
 
-        <jn:timeLabelMessage id="inicioIntervalo" label="Início Intervalo" value="#{configuracaoController.form.inicioIntervalo}" />
-        <jn:timeLabelMessage id="fimIntervalo" label="Fim Intervalo" value="#{configuracaoController.form.fimIntervalo}" />
+        <jn:timeLabelMessage id="inicioIntervalo" label="Início Intervalo" value="#{form.inicioIntervalo}" />
+        <jn:timeLabelMessage id="fimIntervalo" label="Fim Intervalo" value="#{form.fimIntervalo}" />
 
         <jn:label id="group" label="Assinatura">
             <div class="ui-inputgroup">

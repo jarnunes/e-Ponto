@@ -29,9 +29,7 @@ public class DiaTrabalho extends BaseEntity {
     @Column(nullable = false)
     private LocalTime fimIntervalo;
 
-    private LocalTime debito;
-
-    private LocalTime credito;
+    private Double credito;
 
     private String observacao;
 }

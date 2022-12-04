@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui" >
+<cc:interface>
+    <cc:attribute name="styleClass" default="col-12 md:col-6 lg:col-4"/>
+    <cc:attribute name="required"/>
+    <cc:attribute name="value"/>
+    <cc:attribute name="disabled"/>
+    <cc:attribute name="id" required="true"/>
+    <cc:attribute name="pattern"/>
+    <cc:attribute name="timeOnly" default="false"/>
+    <cc:editableValueHolder name="input"/>
+    <cc:clientBehavior name="change" targets="#{cc.attrs.id}" event="change"/>
+
+</cc:interface>
+<cc:implementation>
+    <h:outputStylesheet>
+        .p-datepicker, body .date-time-field input {
+            width: 100%;
+        }
+    </h:outputStylesheet>
+    <p:datePicker id="#{cc.attrs.id}" value="#{cc.attrs.value}" timeOnly="#{cc.attrs.timeOnly}"
+                  pattern="#{cc.attrs.pattern}" required="#{cc.attrs.required}" disabled="#{cc.attrs.disabled}"
+                  styleClass="date-time-field #{cc.attrs.styleClass}" style="width: 100%">
+        <cc:insertChildren/>
+    </p:datePicker>
+
+</cc:implementation>
+</html>

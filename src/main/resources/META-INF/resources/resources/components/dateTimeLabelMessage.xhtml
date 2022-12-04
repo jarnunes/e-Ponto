@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
+<cc:interface>
+    <cc:attribute name="labelKey"/>
+    <cc:attribute name="label" default="#{empty cc.attrs.labelKey?'':msg[cc.attrs.labelKey]}"/>
+    <cc:attribute name="styleClass" default="col-12 md:col-6 lg:col-4"/>
+    <cc:attribute name="required"/>
+    <cc:attribute name="rendered"/>
+    <cc:attribute name="value"/>
+    <cc:attribute name="disabled"/>
+    <cc:attribute name="id" required="true"/>
+    <cc:attribute name="gridClass"/>
+    <cc:attribute name="pattern"/>
+    <cc:attribute name="timeOnly" default="false"/>
+    <cc:editableValueHolder name="input"/>
+    <cc:clientBehavior name="change" targets="#{cc.attrs.id}" event="change"/>
+
+</cc:interface>
+<cc:implementation>
+    <jn:label id="timeLabel" required="#{cc.attrs.required}" label="#{cc.attrs.label}" labelKey="#{cc.attrs.labelKey}"
+              rendered="#{cc.attrs.rendered}" gridClass="#{cc.attrs.gridClass}">
+        <jn:dateTime id="#{cc.attrs.id}" value="#{cc.attrs.value}" timeOnly="#{cc.attrs.timeOnly}" pattern="#{cc.attrs.pattern}"
+                     required="#{cc.attrs.required}" disabled="#{cc.attrs.disabled}">
+            <cc:insertChildren/>
+        </jn:dateTime>
+    </jn:label>
+</cc:implementation>
+</html>

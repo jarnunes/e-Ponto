@@ -2,74 +2,169 @@
 <ui:composition template="/templates/template-crud.xhtml" xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
 
     <ui:param name="controller" value="#{relatorioController}"/>
     <ui:define name="toolbar">
         <p:toolbarGroup id="toolbarGroup">
-            <p:commandButton id="continuar" value="Gerar Relatório" styleClass="mr-1"
-                             action="#{relatorioController.continuar()}"
-                             rendered="#{empty relatorioController.localDate}"
+            <p:commandButton id="continuar" value="Novo Relatório" icon="bi bi-plus-lg" styleClass="mr-1"
+                             action="#{relatorioController.continuar()}" rendered="#{not relatorioController.editMode}"
                              update="@form"/>
 
-            <p:commandButton id="save" value="Salvar" styleClass="mr-1"
-                             action="#{relatorioController.salvarRelatorio()}"
-                             rendered="#{not empty relatorioController.localDate}"/>
-
-
+            <p:commandButton id="cancel" icon="bi bi-arrow-left" styleClass="mr-1"
+                             action="#{relatorioController.cancel()}" update="@form"
+                             rendered="#{relatorioController.editMode}"/>
+            <p:commandButton id="save" value="Salvar" styleClass="mr-1" action="#{relatorioController.salvarRelatorio()}"
+                             rendered="#{relatorioController.editMode}"/>
         </p:toolbarGroup>
-        <h:outputStylesheet>
-            body .ui-toolbar {
-                border: transparent !important;
-                background: transparent !important;
-            }
-        </h:outputStylesheet>
-
     </ui:define>
 
-    <ui:define name="panelEdit">
+    <ui:define name="searchPanel">
+        <jn:inputGroupBtnSearch id="data" label="Data" action="#{relatorioController.buscar()}" styleClass="col-12"
+        update="form:resultPanelGroup" required="true">
+            <jn:dateTime id="dateTime" value="#{relatorioController.localDate}" pattern="MM/yyyy" required="true" styleClass=" "  />
+        </jn:inputGroupBtnSearch>
+    </ui:define>
+
+    <ui:define name="resultPanel">
+        <p:dataTable var="row" rowKey="#{row.ano}" value="#{relatorioController.form.relatorios}" emptyMessage="Nenhum registro encontrado!">
+            <p:column style="width: 5px ">
+                <p:rowToggler/>
+            </p:column>
+
+            <p:column headerText="Referência" style="width: 20px">
+                <h:outputText value="#{row.mes}/#{row.ano}"/>
+            </p:column>
+
+            <p:column headerText="Crédito" style="width: 70px">
+                <h:outputText value="#{row.credito}"/>
+            </p:column>
+
+            <p:rowExpansion styleClass="col-12">
+                <p:dataTable id="datatableRowExpansion" var="diaTrabalho" value="#{row.diasTrabalho}">
+                    <p:column headerText="Dia" style="width: 20px">
+                        <h:outputText value="#{help.toDay(diaTrabalho.dia)}"/>
+                    </p:column>
+
+                    <p:column headerText="Entrada" style="width: 70px">
+                        <h:outputText value="#{diaTrabalho.horaEntrada}"/>
+                    </p:column>
+
+                    <p:column headerText="Inícios" style="width: 70px">
+                        <h:outputText value="#{diaTrabalho.inicioIntervalo}"/>
+                    </p:column>
+
+                    <p:column headerText="Fim" style="width: 70px">
+                        <h:outputText value="#{diaTrabalho.fimIntervalo}"/>
+                    </p:column>
+
+                    <p:column headerText="Saída" style="width: 70px">
+                        <h:outputText value="#{diaTrabalho.horaSaida}"/>
+                    </p:column>
+
+                    <p:column headerText="Crédito" style="width: 70px">
+                        <h:outputText value="#{diaTrabalho.credito}"/>
+                    </p:column>
+                    <p:column headerText="Observação">
+                        <h:outputText value="#{diaTrabalho.observacao}"/>
+                    </p:column>
+
+
+                </p:dataTable>
+            </p:rowExpansion>
+
+        </p:dataTable>
+    </ui:define>
+
+    <ui:define name="editPanel">
         <c:set var="pageTitle" value="${msg['relatorio.title']}" scope="request"/>
 
-        <h:panelGroup id="dataSelect" rendered="#{empty relatorioController.localDate}">
-            <p:datePicker id="data" value="#{relatorioController.localDate}" pattern="MM/yyyy"
-                          styleClass="time-label">
-            </p:datePicker>
-        </h:panelGroup>
+        <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.localDate}" styleClass="col-12">
+            <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.diasTrabalho}"
+            editMode="cell" editable="true" widgetVar="diasTrabalho">
 
-        <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.localDate}">
-            <p:dataTable var="diaTrabalho" value="#{relatorioController.diasTrabalho}">
+                <p:ajax event="cellEdit" listener="#{relatorioController.onCellEdit}" />
+
                 <p:column headerText="Dia" style="width: 20px">
-                    <h:outputText value="#{help.toDay(diaTrabalho.dia)}" />
+                    <h:outputText value="#{help.toDay(dia.dia)}"/>
                 </p:column>
 
-                <p:column headerText="Entrada" style="width: 70px">
-                    <h:outputText value="#{diaTrabalho.horaEntrada}" />
+                <p:column headerText="Entrada" styleClass="time-column-edit" style="width: 100px">
+                    <p:cellEditor >
+                        <f:facet name="output">
+                            <h:outputText value="#{dia.horaEntrada}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:datePicker value="#{dia.horaEntrada}" timeOnly="true" pattern="HH:mm" />
+                        </f:facet>
+                    </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Inícios" style="width: 70px">
-                    <h:outputText value="#{diaTrabalho.inicioIntervalo}" />
+                <p:column headerText="Início Intervalo" styleClass="time-column-edit" style="width: 100px">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{dia.inicioIntervalo}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:datePicker value="#{dia.inicioIntervalo}" timeOnly="true" pattern="HH:mm" />
+                        </f:facet>
+                    </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Fim" style="width: 70px">
-                    <h:outputText value="#{diaTrabalho.fimIntervalo}" />
+                <p:column headerText="Fim Intervalo" styleClass="time-column-edit" style="width: 100px">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{dia.fimIntervalo}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:datePicker value="#{dia.fimIntervalo}" timeOnly="true" pattern="HH:mm" />
+                        </f:facet>
+                    </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Saída" style="width: 70px">
-                    <h:outputText value="#{diaTrabalho.horaSaida}" />
+                <p:column headerText="Saída" styleClass="time-column-edit" style="width: 100px">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{dia.horaSaida}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:datePicker value="#{dia.horaSaida}" timeOnly="true" pattern="HH:mm" />
+                        </f:facet>
+                    </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Débito" style="width: 70px">
-                    <h:outputText value="#{diaTrabalho.debito}" />
+                <p:column headerText="Crédito" styleClass="time-column-edit" style="width: 100px">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{dia.credito}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputNumber value="#{dia.credito}" />
+                        </f:facet>
+                    </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Crédito" style="width: 70px">
-                    <h:outputText value="#{diaTrabalho.credito}" />
-                </p:column>
                 <p:column headerText="Observação">
-                    <h:outputText value="#{diaTrabalho.observacao}" />
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{dia.observacao}"/>
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{dia.observacao}" style="width: 100%" />
+                        </f:facet>
+                    </p:cellEditor>
                 </p:column>
+
+
+
             </p:dataTable>
         </h:panelGroup>
 
+        <h:outputStylesheet>
+            .time-column-edit input{
+                width: 100px;
+            }
+        </h:outputStylesheet>
     </ui:define>
 </ui:composition>

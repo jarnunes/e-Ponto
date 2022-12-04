@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.time.LocalTime;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,21 +18,19 @@ public class DiaTrabalhoVO {
     private String inicioIntervalo;
     private String fimIntervalo;
     private String credito;
-    private String debito;
     private String observacao;
 
     public DiaTrabalhoVO(DiaTrabalho diaTrabalho) {
         this.dia = diaTrabalho.getDia().getDayOfMonth();
-        this.entrada = toHoraString(diaTrabalho.getHoraEntrada());
-        this.saida = toHoraString(diaTrabalho.getHoraSaida());
-        this.inicioIntervalo = toHoraString(diaTrabalho.getInicioIntervalo());
-        this.fimIntervalo = toHoraString(diaTrabalho.getFimIntervalo());
-        this.credito = toHoraString(diaTrabalho.getCredito());
-        this.debito = toHoraString(diaTrabalho.getDebito());
+        this.entrada = toString(diaTrabalho.getHoraEntrada());
+        this.saida = toString(diaTrabalho.getHoraSaida());
+        this.inicioIntervalo = toString(diaTrabalho.getInicioIntervalo());
+        this.fimIntervalo = toString(diaTrabalho.getFimIntervalo());
+        this.credito = toString(diaTrabalho.getCredito());
         this.observacao = StringUtils.trimToEmpty(diaTrabalho.getObservacao());
     }
 
-    private String toHoraString(LocalTime localTime) {
+    private String toString(Object localTime) {
         return String.valueOf(localTime);
     }
 }
