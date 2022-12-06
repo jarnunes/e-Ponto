@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -32,4 +34,8 @@ public class DiaTrabalho extends BaseEntity {
     private Double credito;
 
     private String observacao;
+
+    public void setCredito(Double credito) {
+        this.credito = BigDecimal.valueOf(credito).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
 }

@@ -31,15 +31,15 @@ public class RestController {
     private RelatorioServiceImpl relatorioService;
 
     @RequestMapping(path = "/pdf")
-    public ResponseEntity<byte[]> getFile() {
-        List<DiaTrabalho> diasTrabalho = relatorioService.findAllByMesAno(12, 2022);
-        if (CollectionUtils.isNotEmpty(diasTrabalho)) {
-            RelatorioVO vo = criarEstruturaBaseRelatorio();
-            setInformacoesComplementares(vo, Objects.requireNonNull(diasTrabalho.stream().findFirst().orElse(null)));
-            return RelatorioEponto.obterRelatorio(vo, diasTrabalho.stream().map(DiaTrabalhoVO::new).collect(Collectors.toList()));
-        }
-        return null;
-    }
+//    public ResponseEntity<byte[]> getFile() {
+//        List<DiaTrabalho> diasTrabalho = relatorioService.findAllByMesAno(12, 2022);
+//        if (CollectionUtils.isNotEmpty(diasTrabalho)) {
+//            RelatorioVO vo = criarEstruturaBaseRelatorio();
+//            setInformacoesComplementares(vo, Objects.requireNonNull(diasTrabalho.stream().findFirst().orElse(null)));
+//            return RelatorioEponto.obterRelatorio(vo, diasTrabalho.stream().map(DiaTrabalhoVO::new).collect(Collectors.toList()));
+//        }
+//        return null;
+//    }
 
     private RelatorioVO criarEstruturaBaseRelatorio() {
         Configuracao configuracao = service.obterConfiguracao();

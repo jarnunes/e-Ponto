@@ -38,12 +38,12 @@
             required="true"/>
         <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{form.atividade}"
             required="true"/>
-        <jn:timeLabelMessage id="inicioExpediente" label="Início Expediente" value="#{form.inicioExpediente}" />
+        <jn:timeLabelMessage id="inicioExpediente" label="Início Expediente" value="#{form.inicioExpediente}" required="true" />
 
-        <jn:timeLabelMessage id="fimExpediente" label="Fim Expediente" value="#{form.fimExpediente}" />
+        <jn:timeLabelMessage id="fimExpediente" label="Fim Expediente" value="#{form.fimExpediente}" required="true" />
 
-        <jn:timeLabelMessage id="inicioIntervalo" label="Início Intervalo" value="#{form.inicioIntervalo}" />
-        <jn:timeLabelMessage id="fimIntervalo" label="Fim Intervalo" value="#{form.fimIntervalo}" />
+        <jn:timeLabelMessage id="inicioIntervalo" label="Início Intervalo" value="#{form.inicioIntervalo}" required="true" />
+        <jn:timeLabelMessage id="fimIntervalo" label="Fim Intervalo" value="#{form.fimIntervalo}" required="true" />
 
         <jn:label id="group" label="Assinatura">
             <div class="ui-inputgroup">
@@ -53,10 +53,6 @@
                 </p:fileUpload>
             </div>
         </jn:label>
-
-        <jn:inputTextLabel id="diretorio" labelKey="configuracao.download" value="#{form.diretorioDownload}"
-                           required="true"/>
-
 
         <h:outputStylesheet>
             body .ui-inputgroup > .ui-widget, body .ui-inputgroup > .ui-float-label > .ui-widget {

@@ -9,6 +9,7 @@
     <cc:attribute name="update"/>
     <cc:attribute name="required"/>
     <cc:attribute name="rendered"/>
+    <cc:attribute name="disabled"/>
     <cc:attribute name="id" required="true"/>
     <cc:attribute name="gridClass"/>
     <cc:attribute name="action" method-signature="java.lang.Object action()" default="null" required="true"/>
@@ -28,7 +29,7 @@
         <div class="ui-inputgroup">
             <cc:insertChildren/>
             <p:commandButton id="btn_#{cc.attrs.id}" action="#{cc.attrs.action}" icon="pi pi-search"
-                             styleClass="ui-button-secondary" update="#{cc.attrs.update}" />
+                             styleClass="ui-button-secondary" update="#{cc.attrs.update}"/>
         </div>
     </jn:label>
 </cc:implementation>
