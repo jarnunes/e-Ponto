@@ -11,6 +11,6 @@ import java.util.Optional;
 public class Help {
 
     public Integer toDay(LocalDate localDate) {
-        return Optional.ofNullable(localDate).map(LocalDate::getDayOfMonth).orElse(null);
+        return AppUtils.toDay(localDate);
     }
 }

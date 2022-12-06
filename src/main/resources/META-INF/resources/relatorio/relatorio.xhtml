@@ -3,8 +3,10 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jt="https://jnunes.com/jsf/facelets"
                 xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
 
+    <!--@elvariable id="viewParams" type="java.util.HashMap" -->
     <f:metadata>
         <f:viewAction action="#{relatorioController.beforeInit()}"/>
     </f:metadata>
@@ -14,14 +16,14 @@
         <p:toolbarGroup id="toolbarGroup">
             <p:commandButton id="continuar" value="Novo Relatório" icon="bi bi-plus-lg" styleClass="mr-1"
                              action="#{relatorioController.continuar()}" rendered="#{not relatorioController.editMode}"
-                             update="@form" disabled="#{relatorioController.disable}"/>
+                             update="@form" disabled="#{relatorioController.disabled}"/>
             <p:commandButton id="cancel" icon="bi bi-arrow-left" styleClass="mr-1"
                              action="#{relatorioController.cancel()}" update="@form"
                              rendered="#{relatorioController.editMode}"/>
             <p:commandButton id="save" value="Salvar" styleClass="mr-1"
                              action="#{relatorioController.salvarRelatorio()}"
                              rendered="#{relatorioController.editMode}"
-            update="form:toolbarPanelGroup"/>
+                             update="form:toolbarPanelGroup"/>
             <p:commandButton id="emitirRelatorio" value="Emitir Relatório" styleClass="mr-1"
                              icon="bi bi-file-earmark-text"
                              disabled="#{relatorioController.disableDownload}"
@@ -33,15 +35,16 @@
 
     <ui:define name="searchPanel">
         <jn:inputGroupBtnSearch id="data" label="Data" action="#{relatorioController.buscarRelatorio()}"
-            styleClass="col-12" update="form:resultPanelGroup" required="true" disabled="#{relatorioController.disable}">
+                                styleClass="col-12" update="form:resultPanelGroup" required="true"
+                                disabled="#{relatorioController.disabled}">
             <jn:dateTime id="dateTime" value="#{relatorioController.localDate}" pattern="MM/yyyy" required="true"
-                styleClass=" " disabled="#{relatorioController.disable}"/>
+                         styleClass=" " disabled="#{relatorioController.disabled}"/>
         </jn:inputGroupBtnSearch>
     </ui:define>
 
     <ui:define name="resultPanel">
         <p:dataTable var="row" rowKey="#{row.ano}" value="#{relatorioController.form.relatorios}"
-            emptyMessage="Nenhum registro encontrado!">
+                     emptyMessage="Nenhum registro encontrado!">
             <p:column style="width: 5px ">
                 <p:rowToggler/>
             </p:column>
@@ -93,67 +96,80 @@
             <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.diasTrabalho}"
                          editMode="cell" editable="true" widgetVar="diasTrabalho">
 
-                <p:column headerText="Dia" style="width: 100px; text-align: center">
-                    <h:outputText value="#{help.toDay(dia.dia)}"/>
+                <p:columnGroup type="header">
+                    <p:row>
+                        <p:column headerText="Dia" style="width: 100px; text-align: center"/>
+                        <p:column headerText="Entrada" style="width: 100px; text-align: center"/>
+                        <p:column headerText="Intervalo" colspan="2" style="width: 200px; text-align: center"/>
+                        <p:column headerText="Saída" style="width: 100px; text-align: center"/>
+                        <p:column headerText="Crédito" style="width: 100px; text-align: center"/>
+                        <p:column headerText="Observação"/>
+                    </p:row>
+                </p:columnGroup>
+
+                <p:column style="text-align: center">
+                    <h:outputText value="#{help.toDay(dia.dia)}" style=""/>
                 </p:column>
 
-                <p:column headerText="Entrada" styleClass="time-column-edit" style="width: 100px; text-align: center">
+                <p:column styleClass="time-column-edit" style="text-align: center">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText value="#{dia.horaEntrada}"/>
                         </f:facet>
                         <f:facet name="input">
                             <p:datePicker value="#{dia.horaEntrada}" timeOnly="true" pattern="HH:mm">
-                                <p:ajax listener="#{relatorioController.onCellEdit(dia)}"
+                                <p:ajax listener="#{relatorioController.onCellEditListener(dia)}"
                                         update="form:datatableDiasTrabalho"/>
                             </p:datePicker>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Início Intervalo" styleClass="time-column-edit" style="width: 100px; text-align: center">
+                <p:column styleClass="time-column-edit"
+                          style="text-align: center">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText value="#{dia.inicioIntervalo}"/>
                         </f:facet>
                         <f:facet name="input">
                             <p:datePicker value="#{dia.inicioIntervalo}" timeOnly="true" pattern="HH:mm">
-                                <p:ajax listener="#{relatorioController.onCellEdit(dia)}"
+                                <p:ajax listener="#{relatorioController.onCellEditListener(dia)}"
                                         update="form:datatableDiasTrabalho"/>
                             </p:datePicker>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Fim Intervalo" styleClass="time-column-edit" style="width: 100px; text-align: center">
+                <p:column styleClass="time-column-edit"
+                          style="text-align: center">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText value="#{dia.fimIntervalo}"/>
                         </f:facet>
                         <f:facet name="input">
                             <p:datePicker value="#{dia.fimIntervalo}" timeOnly="true" pattern="HH:mm">
-                                <p:ajax listener="#{relatorioController.onCellEdit(dia)}"
+                                <p:ajax listener="#{relatorioController.onCellEditListener(dia)}"
                                         update="form:datatableDiasTrabalho"/>
                             </p:datePicker>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Saída" styleClass="time-column-edit" style="width: 100px; text-align: center">
+                <p:column styleClass="time-column-edit" style="width: 100px; text-align: center">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText value="#{dia.horaSaida}"/>
                         </f:facet>
                         <f:facet name="input">
                             <p:datePicker value="#{dia.horaSaida}" timeOnly="true" pattern="HH:mm">
-                                <p:ajax listener="#{relatorioController.onCellEdit(dia)}"
+                                <p:ajax listener="#{relatorioController.onCellEditListener(dia)}"
                                         update="form:datatableDiasTrabalho"/>
                             </p:datePicker>
                         </f:facet>
                     </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Crédito" styleClass="time-column-edit" style="width: 100px; text-align: center">
+                <p:column styleClass="time-column-edit" style="width: 100px; text-align: center">
                     <p:cellEditor>
                         <f:facet name="output">
                             <h:outputText value="#{dia.credito}"/>
@@ -180,7 +196,7 @@
                         <p:column colspan="5" style="text-align:right" footerText="Crédito Mês Atual: "/>
                         <p:column style="text-align: center">
                             <f:facet name="footer">
-                                <h:outputText value="#{relatorioController.getSomatorioCreditoDoRelatorioEmEdicao()}" />
+                                <h:outputText value="#{relatorioController.getSomatorioCreditoDoRelatorioEmEdicao()}"/>
                             </f:facet>
                         </p:column>
                         <p:column colspan="1" style="text-align:right"/>

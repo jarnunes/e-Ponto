@@ -1,6 +1,7 @@
 package com.jnunes.eponto.support;
 
 import com.jnunes.core.commons.context.StaticContextAccessor;
+import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.domain.Configuracao;
 import com.jnunes.eponto.domain.DiaTrabalho;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
@@ -25,7 +26,7 @@ public class JornadaTrabalhoUtils {
     }
 
     public static Double calcularTotalCreditoDeDiasTrabalhados(List<DiaTrabalho> diasTrabalho) {
-        return toHoraMinutoDouble(calcularTotalTrabalhoDiario(diasTrabalho));
+        return DateUtils.toHourMinute(calcularTotalTrabalhoDiario(diasTrabalho));
     }
 
     public static Duration calcularTotalTrabalhoDiario(List<DiaTrabalho> diasTrabalho) {
@@ -45,7 +46,7 @@ public class JornadaTrabalhoUtils {
     }
 
     public static Double calcularCreditoDiario(DiaTrabalho diaTrabalho) {
-        return toHoraMinutoDouble(getCreditoDiario(diaTrabalho));
+        return DateUtils.toHourMinute(getCreditoDiario(diaTrabalho));
     }
 
     private static Duration getCreditoDiario(DiaTrabalho diaTrabalho) {
@@ -54,7 +55,4 @@ public class JornadaTrabalhoUtils {
         return creditoDiario.plus(creditoIntervalo);
     }
 
-    private static Double toHoraMinutoDouble(Duration duration) {
-        return (double) duration.toMinutes() / Duration.ofHours(1).toMinutes();
-    }
 }
