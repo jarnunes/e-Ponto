@@ -57,6 +57,7 @@ public class RelatorioController extends BaseController implements Serializable 
             disabled = Boolean.TRUE;
         }
         localDate = LocalDate.now();
+        disableDownload = Boolean.TRUE;
     }
 
     @PostConstruct

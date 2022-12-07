@@ -15,27 +15,25 @@
     <ui:define name="toolbar">
         <c:set var="controller" value="#{relatorioController}"/>
         <p:toolbarGroup id="toolbarGroup">
-            <p:commandButton id="continuar" value="Novo Relatório" icon="bi bi-plus-lg" styleClass="mr-1"
-                             action="#{relatorioController.continuar()}" rendered="#{not relatorioController.editMode}"
-                             update="@form" disabled="#{relatorioController.disabled}"/>
+            <p:commandButton id="continuar" value="#{msg[controller.disableDownload
+                ? 'relatorio.novo' : 'relatorio.edit']}" icon="bi bi-plus-lg" styleClass="mr-1"
+                action="#{controller.continuar()}" rendered="#{not controller.editMode}"
+                update="@form" disabled="#{controller.disabled}"/>
             <p:commandButton id="cancel" icon="bi bi-arrow-left" styleClass="mr-1"
-                             action="#{relatorioController.cancel()}" update="@form"
-                             rendered="#{relatorioController.editMode}"/>
-            <p:commandButton id="save" value="Salvar" styleClass="mr-1"
-                             action="#{relatorioController.salvarRelatorio()}"
-                             rendered="#{relatorioController.editMode}"
-                             update="form:toolbarPanelGroup"/>
-            <p:commandButton id="relatorioBtn" value="#{controller.disableDownload ? msg['relatorio.novo'] : msg['relatorio.edit']}"
-                             styleClass="mr-1" icon="bi bi-file-earmark-text"
-                             disabled="#{not relatorioController.disableDownload}">
-                <p:fileDownload value="#{relatorioController.file}"/>
+                action="#{controller.cancel()}" update="@form" rendered="#{controller.editMode}"/>
+            <p:commandButton id="save" value="#{msg['save']}" styleClass="mr-1"
+                action="#{controller.salvarRelatorio()}" rendered="#{controller.editMode}"
+                update="form:toolbarPanelGroup"/>
+            <p:commandButton id="download" value="#{msg['relatorio.download']}"
+                styleClass="mr-1" icon="bi bi-file-earmark-text" disabled="#{controller.disableDownload}">
+                <p:fileDownload value="#{controller.file}"/>
             </p:commandButton>
         </p:toolbarGroup>
     </ui:define>
 
     <ui:define name="searchPanel">
         <jn:inputGroupBtnSearch id="data" label="Data" action="#{relatorioController.buscarRelatorio()}"
-                                styleClass="col-12" update="form:resultPanelGroup " required="true"
+                                styleClass="col-12" update="form:resultPanelGroup form:toolbarPanelGroup" required="true"
                                 disabled="#{relatorioController.disabled}">
             <jn:dateTime id="dateTime" value="#{relatorioController.localDate}" pattern="MM/yyyy" required="true"
                          styleClass=" " disabled="#{relatorioController.disabled}"/>
