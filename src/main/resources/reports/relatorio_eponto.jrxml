@@ -24,9 +24,10 @@
 	<parameter name="cargo" class="java.lang.String"/>
 	<parameter name="assinatura" class="java.io.InputStream"/>
 	<parameter name="dataReferencia" class="java.lang.String"/>
-	<parameter name="CollectionDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="ItemDataSource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<parameter name="logomarca" class="java.io.InputStream"/>
+	<parameter name="creditoAtual" class="java.lang.Double"/>
+	<parameter name="creditoTotal" class="java.lang.Double"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -442,17 +443,7 @@
 					<pen lineWidth="0.075"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<text><![CDATA[CRÉDITO / DÉBITO ATUAL]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="271" y="10" width="60" height="20" uuid="e2c1d1f9-3851-49c7-828f-2caf0a7b197b">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.075"/>
-				</box>
-				<textElement textAlignment="Center"/>
-				<text><![CDATA[]]></text>
+				<text><![CDATA[CRÉDITO ATUAL]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="331" y="10" width="240" height="20" uuid="a6fbf2a2-cdd7-456f-b935-8de7502f80db">
@@ -463,45 +454,14 @@
 				</box>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="1" y="30" width="30" height="20" uuid="6f45c5d4-1760-464f-8df8-1eccd8edb6d3">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
+			<textField>
+				<reportElement x="271" y="10" width="60" height="20" uuid="8917a70a-2d84-44d9-8d7c-dcc69f2b233c"/>
 				<box>
 					<pen lineWidth="0.075"/>
 				</box>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="31" y="30" width="240" height="20" uuid="c15b5694-ec10-4a0a-9998-5d5ffade3d13">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box rightPadding="5">
-					<pen lineWidth="0.075"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<text><![CDATA[TOTAL]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="271" y="30" width="60" height="20" uuid="2d60faec-7639-4dd0-b21f-4a46712a2f38">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.075"/>
-				</box>
-				<textElement textAlignment="Center"/>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="331" y="30" width="240" height="20" uuid="17b10ba8-de0a-4c90-a77f-0120d895fa64">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="0.075"/>
-				</box>
-				<text><![CDATA[]]></text>
-			</staticText>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{creditoAtual}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>

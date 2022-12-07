@@ -18,5 +18,6 @@ public class RelatorioVO {
     private String atividade;
     private String cargo;
     private byte[] assinatura;
-
+    private Double creditoAtual;
+    private Double creditoTotal;
 }

@@ -13,6 +13,7 @@
 
     <ui:param name="controller" value="#{relatorioController}"/>
     <ui:define name="toolbar">
+        <c:set var="controller" value="#{relatorioController}"/>
         <p:toolbarGroup id="toolbarGroup">
             <p:commandButton id="continuar" value="Novo Relatório" icon="bi bi-plus-lg" styleClass="mr-1"
                              action="#{relatorioController.continuar()}" rendered="#{not relatorioController.editMode}"
@@ -24,10 +25,9 @@
                              action="#{relatorioController.salvarRelatorio()}"
                              rendered="#{relatorioController.editMode}"
                              update="form:toolbarPanelGroup"/>
-            <p:commandButton id="emitirRelatorio" value="Emitir Relatório" styleClass="mr-1"
-                             icon="bi bi-file-earmark-text"
-                             disabled="#{relatorioController.disableDownload}"
-                             rendered="#{relatorioController.editMode}">
+            <p:commandButton id="relatorioBtn" value="#{controller.disableDownload ? msg['relatorio.novo'] : msg['relatorio.edit']}"
+                             styleClass="mr-1" icon="bi bi-file-earmark-text"
+                             disabled="#{not relatorioController.disableDownload}">
                 <p:fileDownload value="#{relatorioController.file}"/>
             </p:commandButton>
         </p:toolbarGroup>
@@ -35,7 +35,7 @@
 
     <ui:define name="searchPanel">
         <jn:inputGroupBtnSearch id="data" label="Data" action="#{relatorioController.buscarRelatorio()}"
-                                styleClass="col-12" update="form:resultPanelGroup" required="true"
+                                styleClass="col-12" update="form:resultPanelGroup " required="true"
                                 disabled="#{relatorioController.disabled}">
             <jn:dateTime id="dateTime" value="#{relatorioController.localDate}" pattern="MM/yyyy" required="true"
                          styleClass=" " disabled="#{relatorioController.disabled}"/>
@@ -43,13 +43,13 @@
     </ui:define>
 
     <ui:define name="resultPanel">
-        <p:dataTable var="row" rowKey="#{row.ano}" value="#{relatorioController.form.relatorios}"
+        <p:dataTable var="row" rowKey="#{row.id}" value="#{relatorioController.form.relatorios}"
                      emptyMessage="Nenhum registro encontrado!">
             <p:column style="width: 5px ">
                 <p:rowToggler/>
             </p:column>
             <p:column headerText="Referência" style="width: 20px">
-                <h:outputText value="#{row.mes}/#{row.ano}"/>
+                <h:outputText value="#{row.referencia}"/>
             </p:column>
             <p:column headerText="Crédito" style="width: 70px">
                 <h:outputText value="#{row.credito}"/>

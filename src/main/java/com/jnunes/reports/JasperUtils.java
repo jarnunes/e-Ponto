@@ -14,15 +14,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class JasperUtils {
+import static com.jnunes.reports.ReportConsts.*;
 
-    private static final String BASE_REPORTS_PATH = "reports/";
+public class JasperUtils {
 
     protected static JRBeanCollectionDataSource dataSource =
             new JRBeanCollectionDataSource(Collections.singletonList(new Object()));
 
     public static StreamedContent getStreamedContent(Map<String, Object> params, String templateName,
-                                                     String fileName) {
+        String fileName) {
         JasperPrint jasperPrint = getJasperPrint(params, templateName);
         try {
             byte[] relatorio = JasperExportManager.exportReportToPdf(jasperPrint);

@@ -56,11 +56,12 @@ public class RelatorioController extends BaseController implements Serializable 
             JSFUtils.addErrorMessage("configuracao.empty");
             disabled = Boolean.TRUE;
         }
+        localDate = LocalDate.now();
     }
 
     @PostConstruct
     public void postConstruct() {
-        localDate = LocalDate.now();
+//        localDate = LocalDate.now();
         form = new Form();
         diasTrabalho = new ArrayList<>();
     }
@@ -91,8 +92,8 @@ public class RelatorioController extends BaseController implements Serializable 
         setDiasTrabalho(service.findAllByMesAno(localDate.getMonthValue(), localDate.getYear()));
         getDiasTrabalho().stream().findFirst().ifPresent(diaTrabalho -> {
             RelatorioPesquisaVO relatorio = new RelatorioPesquisaVO();
-            relatorio.setMes(diaTrabalho.getDia().getMonth().name());
-            relatorio.setAno(diaTrabalho.getDia().getYear());
+            relatorio.setId(diaTrabalho.getId());
+            relatorio.setReferencia(DateUtils.monthName(diaTrabalho.getDia()) + "/" + diaTrabalho.getDia().getYear());
             relatorio.setDiasTrabalho(diasTrabalho);
             getForm().setRelatorios(Collections.singletonList(relatorio));
         });

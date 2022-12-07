@@ -10,13 +10,13 @@ import java.util.List;
 @Getter
 @Setter
 public class RelatorioPesquisaVO {
-    private Integer ano;
-    private String mes;
+    private Long id;
+    private String referencia;
     private Double credito;
     private List<DiaTrabalho> diasTrabalho;
 
     public void setDiasTrabalho(List<DiaTrabalho> list) {
-        credito = JornadaTrabalhoUtils.calcularTotalCreditoDeDiasTrabalhados(list);
+        credito = JornadaTrabalhoUtils.calcularCreditoTotal(list);
         this.diasTrabalho = list;
     }
 }
