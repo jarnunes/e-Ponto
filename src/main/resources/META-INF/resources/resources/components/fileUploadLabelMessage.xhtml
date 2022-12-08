@@ -5,44 +5,36 @@
 <cc:interface>
     <cc:attribute name="labelKey" />
     <cc:attribute name="label" default="#{empty cc.attrs.labelKey?'':msg[cc.attrs.labelKey]}" />
-    <cc:attribute name="labelFor" default="input" />
+    <cc:attribute name="id" />
     <cc:attribute name="styleClass" default="col-12 md:col-6 lg:col-4" />
     <cc:attribute name="listener" method-signature="void action(javax.faces.event.ActionEvent)" />
     <cc:attribute name="required" />
     <cc:attribute name="rendered" />
-    <cc:attribute name="disabled" />
-    <cc:attribute name="update" />
-    <cc:attribute name="placeholderKey" default="Nenhum arquivo selecionado" />
-    <cc:attribute name="sizeLimit" default="2000000" />
-    <cc:attribute name="mode" default="advanced" />
-    <cc:attribute name="dragDropSupport" default="true" />
     <cc:attribute name="gridClass"/>
 
 </cc:interface>
 <cc:implementation>
     <h:outputStylesheet>
-        .upload-group span{
-            margin-right: 0 !important;
-            border-bottom-right-radius: 0 !important;
-            border-top-right-radius: 0 !important;
-            padding-bottom: 4.5px !important;
+        body .ui-inputgroup > .ui-widget, body .ui-inputgroup > .ui-float-label > .ui-widget {
+            border-radius: 5px;
+            background: #efefef;
+            border: 1px solid #ced4da;
+            width: 100%;
         }
 
-        .upload-group input {
-            user-select: none;
-            pointer-events: none;
+        .ui-fileupload-simple .ui-button {
+            overflow: hidden;
+            height: 100%;
+            border-radius: 5px 0 0 5px;
         }
     </h:outputStylesheet>
-    <jn:label id="uploadGroup" required="#{cc.attrs.required}" labelKey="#{cc.attrs.labelKey}"
-        rendered="#{cc.attrs.rendered}" gridClass="#{cc.attrs.gridClass}">
-        <div class="upload-group">
-            <p:fileUpload id="upload" mode="#{cc.attrs.mode}" dragDropSupport="#{cc.attrs.dragDropSupport}"
-                label="#{msg['file.upload']}" auto="true" chooseIcon="pi pi-upload" process="@this"
-                listener="#{cc.attrs.listener}" sizeLimit="#{cc.attrs.sizeLimit}" disabled="#{cc.attrs.disabled}"
-                update="#{cc.attrs.update}"
-                allowTypes="/(\.|\/)(tiff|pjp|jfif|bmp|gif|svg|png|xbm|dib|jxl|jpeg|svgz|jpg|webp|ico|tif|pjpeg|avif)$/"
-                accept=".tiff,.pjp,.jfif,.bmp,.gif,.svg,.png,.xbm,.dib,.jxl,.jpeg,.svgz,.jpg,.webp,.ico,.tif,.pjpeg,.avif" />
-            <p:inputText id="input" readonly="true" placeholder="#{cc.attrs.placeholderKey}" />
+    <jn:label id="#{cc.attrs.id}" required="#{cc.attrs.required}" label="#{cc.attrs.label}" labelKey="#{cc.attrs.labelKey}"
+              rendered="#{cc.attrs.rendered}" gridClass="#{cc.attrs.gridClass}">
+        <div class="ui-inputgroup">
+            <p:fileUpload listener="#{cc.attrs.listener}" mode="simple" skinSimple="true"
+                          label="#{msg['upload.label']}" auto="true" chooseIcon="pi pi-upload"
+                          style="width: 100%; !important;" allowTypes="/(\.|\/)(png|jpeg|jpg)$/" accept=".png,.jpeg,.jpg">
+            </p:fileUpload>
         </div>
     </jn:label>
 </cc:implementation>

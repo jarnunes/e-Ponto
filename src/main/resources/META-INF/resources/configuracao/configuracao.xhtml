@@ -14,21 +14,15 @@
     </ui:define>
 
     <ui:define name="editPanel">
-        <jn:titleLabelDivider label="Empresa" />
         <c:set var="pageTitle" value="${msg['configuracao.title']}" scope="request"/>
+        <c:set var="controller" value="#{configuracaoController}" scope="request"/>
         <c:set var="form" value="#{configuracaoController.editForm}" scope="request"/>
 
-        <jn:inputTextLabel id="organizacao" labelKey="configuracao.organizacao" value="#{configuracaoController.editForm.organizacao}"
-            required="true"/>
-        <jn:inputTextLabel id="endereco" labelKey="configuracao.endereco" value="#{form.endereco}"
-            required="true"/>
-        <jn:label id="group2" label="Logo">
-                <div id="inputgroupdd" class="ui-inputgroup">
-                    <p:fileUpload id="uploader3" mode="simple" skinSimple="true" auto="true"
-                        title="my custom title" listener="#{configuracaoController.handleLogoUpload}"/>
-            </div>
-        </jn:label>
-
+        <!-- Empresa -->
+        <jn:titleLabelDivider label="Empresa" />
+        <jn:inputTextLabel id="organizacao" labelKey="configuracao.organizacao"  required="true" value="#{form.organizacao}" />
+        <jn:inputTextLabel id="endereco" labelKey="configuracao.endereco" value="#{form.endereco}" required="true"/>
+        <jn:fileUploadLabelMessage id="idLogo" labelKey="configuracao.logo" listener="#{controller.handleLogoUpload}" />
 
         <!-- Funcionário -->
         <jn:titleLabelDivider label="Funcionario" styleClass="mt-4" />
@@ -39,34 +33,10 @@
         <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{form.atividade}"
             required="true"/>
         <jn:timeLabelMessage id="inicioExpediente" label="Início Expediente" value="#{form.inicioExpediente}" required="true" />
-
         <jn:timeLabelMessage id="fimExpediente" label="Fim Expediente" value="#{form.fimExpediente}" required="true" />
-
         <jn:timeLabelMessage id="inicioIntervalo" label="Início Intervalo" value="#{form.inicioIntervalo}" required="true" />
         <jn:timeLabelMessage id="fimIntervalo" label="Fim Intervalo" value="#{form.fimIntervalo}" required="true" />
+        <jn:fileUploadLabelMessage id="assinatura" labelKey="configuracao.assinatura" listener="#{controller.handleAssinaturaUpload}" />
 
-        <jn:label id="group" label="Assinatura">
-            <div class="ui-inputgroup">
-                <p:fileUpload listener="#{configuracaoController.handleAssinaturaUpload}" mode="simple" skinSimple="true"
-                              label="Carregar" auto="true" chooseIcon="pi pi-upload"
-                              style="width: 100%; !important;">
-                </p:fileUpload>
-            </div>
-        </jn:label>
-
-        <h:outputStylesheet>
-            body .ui-inputgroup > .ui-widget, body .ui-inputgroup > .ui-float-label > .ui-widget {
-                border-radius: 5px;
-                background: #efefef;
-                border: 1px solid #ced4da;
-                width: 100%;
-            }
-
-            .ui-fileupload-simple .ui-button {
-                overflow: hidden;
-                height: 100%;
-                border-radius: 5px 0 0 5px;
-            }
-        </h:outputStylesheet>
     </ui:define>
 </ui:composition>

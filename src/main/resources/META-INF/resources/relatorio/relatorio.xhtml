@@ -67,6 +67,18 @@
             <jt:column id="saida" value="#{diaTrabalho.horaSaida}"/>
             <jt:column id="credito" value="#{diaTrabalho.credito}"/>
             <jt:column id="observacao" value="#{diaTrabalho.observacao}"/>
+
+            <p:columnGroup type="footer">
+                <p:row>
+                    <p:column colspan="5" style="text-align:right" footerText="Crédito Mês Atual: "/>
+                    <p:column style="text-align: center">
+                        <f:facet name="footer">
+                            <h:outputText value="#{relatorioController.getSomatorioCreditoDoRelatorioEmEdicao()}"/>
+                        </f:facet>
+                    </p:column>
+                    <p:column colspan="1" style="text-align:right"/>
+                </p:row>
+            </p:columnGroup>
          </p:dataTable>
 
         <h:outputStylesheet>
