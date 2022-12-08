@@ -49,4 +49,6 @@ public class Configuracao extends BaseEntity {
     @Column(columnDefinition = "BLOB")
     private byte[] assinatura;
 
+    private Boolean habilitarFimDeSemana = Boolean.FALSE;
+
 }

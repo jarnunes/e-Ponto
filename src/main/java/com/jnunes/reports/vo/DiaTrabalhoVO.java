@@ -6,12 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.bytebuddy.asm.Advice;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 
 @Getter
 @Setter
@@ -26,13 +24,23 @@ public class DiaTrabalhoVO {
     private String credito;
     private String observacao;
 
-    public DiaTrabalhoVO(DiaTrabalho diaTrabalho) {
+    public DiaTrabalhoVO(DiaTrabalho diaTrabalho, Boolean habilitarFimDeSemana) {
         LocalDate date = diaTrabalho.getDia();
         this.dia = diaTrabalho.getDia().getDayOfMonth();
         this.entrada = toStringOrWeekDay(diaTrabalho.getHoraEntrada(), date);
         this.saida = toStringOrWeekDay(diaTrabalho.getHoraSaida(), date);
         this.inicioIntervalo = toStringOrWeekDay(diaTrabalho.getInicioIntervalo(), date);
         this.fimIntervalo = toStringOrWeekDay(diaTrabalho.getFimIntervalo(), date);
+        this.credito = toString(diaTrabalho.getCredito());
+        this.observacao = StringUtils.trimToEmpty(diaTrabalho.getObservacao());
+    }
+
+    public DiaTrabalhoVO(DiaTrabalho diaTrabalho) {
+        this.dia = diaTrabalho.getDia().getDayOfMonth();
+        this.entrada = toString(diaTrabalho.getHoraEntrada());
+        this.saida = toString(diaTrabalho.getHoraSaida());
+        this.inicioIntervalo = toString(diaTrabalho.getInicioIntervalo());
+        this.fimIntervalo = toString(diaTrabalho.getFimIntervalo());
         this.credito = toString(diaTrabalho.getCredito());
         this.observacao = StringUtils.trimToEmpty(diaTrabalho.getObservacao());
     }

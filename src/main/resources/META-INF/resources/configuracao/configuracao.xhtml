@@ -19,24 +19,33 @@
         <c:set var="form" value="#{configuracaoController.editForm}" scope="request"/>
 
         <!-- Empresa -->
-        <jn:titleLabelDivider label="Empresa" />
+        <jn:titleLabelDivider labelKey="configuracao.divider.empresa" />
         <jn:inputTextLabel id="organizacao" labelKey="configuracao.organizacao"  required="true" value="#{form.organizacao}" />
         <jn:inputTextLabel id="endereco" labelKey="configuracao.endereco" value="#{form.endereco}" required="true"/>
         <jn:fileUploadLabelMessage id="idLogo" labelKey="configuracao.logo" listener="#{controller.handleLogoUpload}" />
 
         <!-- Funcionário -->
-        <jn:titleLabelDivider label="Funcionario" styleClass="mt-4" />
-        <jn:inputTextLabel id="funcionario" labelKey="configuracao.funcionario" value="#{form.funcionario}"
-            required="true"/>
-        <jn:inputTextLabel id="funcao" labelKey="configuracao.funcao" value="#{form.funcao}"
-            required="true"/>
-        <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{form.atividade}"
-            required="true"/>
+        <jn:titleLabelDivider labelKey="configuracao.divider.funcionario" styleClass="mt-4" />
+        <jn:inputTextLabel id="funcionario" labelKey="configuracao.funcionario" value="#{form.funcionario}" required="true"/>
+        <jn:inputTextLabel id="funcao" labelKey="configuracao.funcao" value="#{form.funcao}" required="true"/>
+        <jn:inputTextLabel id="atividade" labelKey="configuracao.atividade" value="#{form.atividade}" required="true"/>
+        <jn:fileUploadLabelMessage id="assinatura" labelKey="configuracao.assinatura" listener="#{controller.handleAssinaturaUpload}"
+        styleClass="ui-button-secondary"/>
+
+        <!-- Expediente -->
+        <jn:titleLabelDivider labelKey="configuracao.divider.expediente" styleClass="mt-4" />
         <jn:timeLabelMessage id="inicioExpediente" label="Início Expediente" value="#{form.inicioExpediente}" required="true" />
         <jn:timeLabelMessage id="fimExpediente" label="Fim Expediente" value="#{form.fimExpediente}" required="true" />
         <jn:timeLabelMessage id="inicioIntervalo" label="Início Intervalo" value="#{form.inicioIntervalo}" required="true" />
         <jn:timeLabelMessage id="fimIntervalo" label="Fim Intervalo" value="#{form.fimIntervalo}" required="true" />
-        <jn:fileUploadLabelMessage id="assinatura" labelKey="configuracao.assinatura" listener="#{controller.handleAssinaturaUpload}" />
+
+        <jn:label id="apontarFimDeSemana" labelKey="configuracao.divider.apontar.fim.desemana" >
+            <p:divider  styleClass="col-12 mt-0 mb-0" type="transparent" />
+            <p:selectBooleanButton onLabel="Sim" offLabel="Não" styleClass="col-12"
+                value="#{form.habilitarFimDeSemana}"
+                onIcon="pi pi-check" offIcon="pi pi-times" style="width:6rem" />
+        </jn:label>
+
 
     </ui:define>
 </ui:composition>

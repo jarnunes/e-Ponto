@@ -27,16 +27,29 @@
                 styleClass="mr-1" icon="bi bi-file-earmark-text" disabled="#{controller.disableDownload}">
                 <p:fileDownload value="#{relatorioController.obterArquivo()}"/>
             </p:commandButton>
+            <p:commandButton id="remove" action="#{controller.remove}" immediate="true" rendered="#{controller.editMode}"
+                styleClass="mr-1" icon="bi bi-trash-fill" disabled="#{controller.disableDownload }"
+            update="@form">
+                <p:confirm header="#{msg['relatorio.dialog.confirm.header']}" message="#{msg['relatorio.dialog.confirm.message']}"
+                />
+            </p:commandButton>
+
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes"/>
+            </p:confirmDialog>
+
         </p:toolbarGroup>
     </ui:define>
 
     <ui:define name="searchPanel">
         <jn:inputGroupBtnSearch id="data" label="Data" action="#{relatorioController.buscarRelatorio()}"
-                                styleClass="col-12" update="form:resultPanelGroup form:toolbarPanelGroup" required="true"
-                                disabled="#{relatorioController.disabled}">
+            styleClass="col-12" update="form:resultPanelGroup form:toolbarPanelGroup" required="true"
+            disabled="#{relatorioController.disabled}">
             <p:datePicker id="dateTime" value="#{relatorioController.form.localDate}" pattern="MM/yyyy" required="true"
-                         styleClass=" " disabled="#{relatorioController.disabled}">
-                <p:ajax process="@this" immediate="true" />
+                styleClass=" " disabled="#{relatorioController.disabled}">
+                <p:ajax process="@this" immediate="true" global="false" disabled="icon" />
             </p:datePicker>
         </jn:inputGroupBtnSearch>
     </ui:define>
@@ -47,16 +60,16 @@
 
             <p:columnGroup type="header">
                 <p:row>
-                    <p:column  headerText="Dia" rowspan="2" style="width: 100px; text-align: center" styleClass="tcenter"/>
-                    <p:column headerText="Entrada" rowspan="2" style="width: 100px; text-align: center"/>
-                    <p:column headerText="Intervalo" colspan="2" style="width: 200px; text-align: center"/>
-                    <p:column headerText="Saída" rowspan="2" style="width: 100px; text-align: center"/>
-                    <p:column headerText="Crédito" rowspan="2" style="width: 100px; text-align: center"/>
-                    <p:column headerText="Observação" rowspan="2"/>
+                    <p:column headerText="#{msg['relatorio.header.text.dia']}" rowspan="2" style="width: 100px; text-align: center" styleClass="tcenter"/>
+                    <p:column headerText="#{msg['relatorio.header.text.entrada']}" rowspan="2" style="width: 100px; text-align: center"/>
+                    <p:column headerText="#{msg['relatorio.header.text.intervalo']}" colspan="2" style="width: 200px; text-align: center"/>
+                    <p:column headerText="#{msg['relatorio.header.text.saida']}" rowspan="2" style="width: 100px; text-align: center"/>
+                    <p:column headerText="#{msg['relatorio.header.text.credito']}" rowspan="2" style="width: 100px; text-align: center"/>
+                    <p:column headerText="#{msg['relatorio.header.text.observacao']}" rowspan="2"/>
                 </p:row>
                 <p:row>
-                    <p:column headerText="Início" style="width: 100px; text-align: center"/>
-                    <p:column headerText="Fim" style="width: 200px; text-align: center"/>
+                    <p:column headerText="#{msg['relatorio.header.text.inicio']}" style="width: 100px; text-align: center"/>
+                    <p:column headerText="#{msg['relatorio.header.text.fim']}" style="width: 200px; text-align: center"/>
                 </p:row>
             </p:columnGroup>
 
@@ -94,18 +107,19 @@
         <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.form.localDate}" styleClass="col-12">
             <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.form.diasTrabalho}"
                          editMode="cell" editable="true" widgetVar="diasTrabalho">
+                <c:set var="disableCellEdit" value="#{controller.disableCellEdit(dia)}" />
                 <p:columnGroup type="header">
                     <p:row>
-                        <p:column  headerText="Dia" rowspan="2" style="width: 100px; text-align: center" styleClass="tcenter"/>
-                        <p:column headerText="Entrada" rowspan="2" style="width: 100px; text-align: center"/>
-                        <p:column headerText="Intervalo" colspan="2" style="width: 200px; text-align: center"/>
-                        <p:column headerText="Saída" rowspan="2" style="width: 100px; text-align: center"/>
-                        <p:column headerText="Crédito" rowspan="2" style="width: 100px; text-align: center"/>
-                        <p:column headerText="Observação" rowspan="2"/>
+                        <p:column headerText="#{msg['relatorio.header.text.dia']}" rowspan="2" style="width: 100px; text-align: center" styleClass="tcenter"/>
+                        <p:column headerText="#{msg['relatorio.header.text.entrada']}" rowspan="2" style="width: 100px; text-align: center"/>
+                        <p:column headerText="#{msg['relatorio.header.text.intervalo']}" colspan="2" style="width: 200px; text-align: center"/>
+                        <p:column headerText="#{msg['relatorio.header.text.saida']}" rowspan="2" style="width: 100px; text-align: center"/>
+                        <p:column headerText="#{msg['relatorio.header.text.credito']}" rowspan="2" style="width: 100px; text-align: center"/>
+                        <p:column headerText="#{msg['relatorio.header.text.observacao']}" rowspan="2"/>
                     </p:row>
                     <p:row>
-                        <p:column headerText="Início" style="width: 100px; text-align: center"/>
-                        <p:column headerText="Fim" style="width: 200px; text-align: center"/>
+                        <p:column headerText="#{msg['relatorio.header.text.inicio']}" style="width: 100px; text-align: center"/>
+                        <p:column headerText="#{msg['relatorio.header.text.fim']}" style="width: 200px; text-align: center"/>
                     </p:row>
                 </p:columnGroup>
 
@@ -114,7 +128,7 @@
                 </p:column>
 
                 <p:column styleClass="time-column-edit" style="text-align: center">
-                    <p:cellEditor>
+                    <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.horaEntrada}"/>
                         </f:facet>
@@ -129,7 +143,7 @@
 
                 <p:column styleClass="time-column-edit"
                           style="text-align: center">
-                    <p:cellEditor>
+                    <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.inicioIntervalo}"/>
                         </f:facet>
@@ -144,7 +158,7 @@
 
                 <p:column styleClass="time-column-edit"
                           style="text-align: center">
-                    <p:cellEditor>
+                    <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.fimIntervalo}"/>
                         </f:facet>
@@ -158,7 +172,7 @@
                 </p:column>
 
                 <p:column styleClass="time-column-edit" style="width: 100px; text-align: center">
-                    <p:cellEditor>
+                    <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.horaSaida}"/>
                         </f:facet>
@@ -172,7 +186,7 @@
                 </p:column>
 
                 <p:column styleClass="time-column-edit" style="width: 100px; text-align: center">
-                    <p:cellEditor>
+                    <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.credito}"/>
                         </f:facet>
@@ -183,7 +197,7 @@
                 </p:column>
 
                 <p:column headerText="Observação">
-                    <p:cellEditor>
+                    <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.observacao}"/>
                         </f:facet>

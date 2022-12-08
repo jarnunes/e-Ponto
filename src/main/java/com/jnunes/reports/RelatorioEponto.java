@@ -13,8 +13,10 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 import static com.jnunes.reports.ReportConsts.*;
 
@@ -43,21 +45,27 @@ public class RelatorioEponto extends JasperUtils {
     }
 
     public static StreamedContent obterRelatorio(List<DiaTrabalho> diasTrabalho) {
-        return validateNonEmptyThenGetValue(StreamedContent.class, diasTrabalho, () -> internalObterRelatorio(diasTrabalho));
-    }
-
-    public static void salvarRelatorioEmDisco(List<DiaTrabalho> diasTrabalho) {
-        RelatorioVO vo = criarEstruturaBaseRelatorio();
-        setInformacoesComplementares(vo, diasTrabalho);
-        dataSource = getCollectionDataSource(Collections.singletonList(new Object()));
-        Map<String, Object> empParams = getParametros(vo, diasTrabalho.stream().map(DiaTrabalhoVO::new).collect(Collectors.toList()));
-        salvarArquivoEmDiretorio(empParams, TEMPLATE_EPONTO, getFileName(),"C:\\Users\\jarnu\\Downloads\\pastarelatorio");
+        return validateNonEmptyThenGetValue(StreamedContent.class, diasTrabalho,
+            () -> internalObterRelatorio(diasTrabalho));
     }
 
     private static StreamedContent internalObterRelatorio(List<DiaTrabalho> diasTrabalho) {
         RelatorioVO vo = criarEstruturaBaseRelatorio();
         setInformacoesComplementares(vo, diasTrabalho);
-        return obterStreamedContent(vo, diasTrabalho.stream().map(DiaTrabalhoVO::new).collect(Collectors.toList()));
+
+        List<DiaTrabalhoVO> diasTrabalhoVO = new ArrayList<>();
+        validateOrElse(getConfiguracaoService().obterConfiguracao().getHabilitarFimDeSemana(),
+            () -> diasTrabalhoVO.addAll(criarListaDiaTrabalhoVO(diasTrabalho)),
+            () -> diasTrabalhoVO.addAll(criarListaDiaTrabalhoVOFimDeSemana(diasTrabalho)));
+        return obterStreamedContent(vo, diasTrabalhoVO);
+    }
+
+    private static List<DiaTrabalhoVO> criarListaDiaTrabalhoVO(List<DiaTrabalho> diasTrabalho){
+        return  diasTrabalho.stream().map(DiaTrabalhoVO::new).toList();
+    }
+
+    private static List<DiaTrabalhoVO> criarListaDiaTrabalhoVOFimDeSemana(List<DiaTrabalho> diasTrabalho){
+        return  diasTrabalho.stream().map( diaTrabalho -> new DiaTrabalhoVO(diaTrabalho, true)).toList();
     }
 
     private static RelatorioVO criarEstruturaBaseRelatorio() {

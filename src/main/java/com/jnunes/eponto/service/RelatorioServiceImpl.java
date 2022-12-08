@@ -24,7 +24,13 @@ public class RelatorioServiceImpl extends BaseServiceImpl<DiaTrabalho> implement
     }
 
     @Override
-    @Cacheable("diasTrabalho")
+    public void remove(List<DiaTrabalho> diasTrabalho) {
+        for (DiaTrabalho diaTrabalho : diasTrabalho) {
+            this.delete(diaTrabalho.getId());
+        }
+    }
+
+    @Override
     public List<DiaTrabalho> findAllByMesAno(Integer mes, Integer ano) {
         return repository.findAllByMesAno(mes, ano);
     }

@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication(scanBasePackages = {"com.jnunes"})
 @EntityScan(basePackages = {"com.jnunes"})
 @EnableJpaRepositories(basePackages = {"com.jnunes"})
-@EnableCaching
 public class EpontoApplication {
 
     public static void main(String[] args) {

@@ -29,7 +29,7 @@
         <div class="ui-inputgroup">
             <cc:insertChildren/>
             <p:commandButton id="btn_#{cc.attrs.id}" action="#{cc.attrs.action}" icon="pi pi-search"
-                             styleClass="ui-button-secondary" update="#{cc.attrs.update}"/>
+                             styleClass="ui-button-secondary" update="#{cc.attrs.update}" disabled="#{cc.attrs.disabled}"/>
         </div>
     </jn:label>
 </cc:implementation>

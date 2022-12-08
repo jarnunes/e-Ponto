@@ -26,11 +26,18 @@
             overflow: hidden;
             height: 100%;
             border-radius: 5px 0 0 5px;
+            background-color: #969696 !important;
+            border-color: #969696 !important;
         }
+
+        .ui-fileupload-simple .ui-button:hover {
+            border-color: #969696 !important;
+        }
+
     </h:outputStylesheet>
     <jn:label id="#{cc.attrs.id}" required="#{cc.attrs.required}" label="#{cc.attrs.label}" labelKey="#{cc.attrs.labelKey}"
               rendered="#{cc.attrs.rendered}" gridClass="#{cc.attrs.gridClass}">
-        <div class="ui-inputgroup">
+        <div class="ui-inputgroup btn-upload">
             <p:fileUpload listener="#{cc.attrs.listener}" mode="simple" skinSimple="true"
                           label="#{msg['upload.label']}" auto="true" chooseIcon="pi pi-upload"
                           style="width: 100%; !important;" allowTypes="/(\.|\/)(png|jpeg|jpg)$/" accept=".png,.jpeg,.jpg">

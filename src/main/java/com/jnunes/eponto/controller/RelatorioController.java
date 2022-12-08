@@ -1,35 +1,27 @@
 package com.jnunes.eponto.controller;
 
-import com.jnunes.core.commons.MediaType;
 import com.jnunes.core.commons.utils.DateUtils;
-import com.jnunes.eponto.controller.vo.RelatorioPesquisaVO;
 import com.jnunes.eponto.domain.Configuracao;
 import com.jnunes.eponto.domain.DiaTrabalho;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.eponto.service.RelatorioServiceImpl;
 import com.jnunes.eponto.support.JornadaTrabalhoUtils;
 import com.jnunes.reports.RelatorioEponto;
-import com.jnunes.springjsf.support.utils.PFUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.jnunes.reports.ReportConsts.BASE_REPORTS_PATH;
 
 @Named
 @ManagedBean
@@ -54,6 +46,9 @@ public class RelatorioController extends BaseController implements Serializable 
     @Getter
     private Boolean disabled;
 
+    @Getter
+    private Boolean habilitarFimDeSemana;
+
     public void beforeInit() {
         configuracao = configuracaoService.obterConfiguracao();
         validateNull(configuracao.getId(), () -> {
@@ -66,13 +61,11 @@ public class RelatorioController extends BaseController implements Serializable 
     @PostConstruct
     public void postConstruct() {
         this.file = null;
-        this.novoArquivo = null;
     }
 
     public void continuar() {
         setDiasTrabalho();
         setRelatorioParaDownload();
-        obterNovoArquivo();
         editMode = Boolean.TRUE;
     }
 
@@ -80,16 +73,13 @@ public class RelatorioController extends BaseController implements Serializable 
         editMode = Boolean.FALSE;
         disableDownload = Boolean.TRUE;
         form = new Form();
+        habilitarFimDeSemana = configuracao.getHabilitarFimDeSemana();
     }
 
     public void salvarRelatorio() {
         service.save(getForm().getDiasTrabalho());
         setRelatorioParaDownload();
         addInfoMessage("relatorio.salvo.sucesso");
-    }
-
-    public void salvarNoDisco(){
-        RelatorioEponto.salvarRelatorioEmDisco(getForm().getDiasTrabalho());
     }
 
     private void setDiasTrabalho() {
@@ -104,6 +94,14 @@ public class RelatorioController extends BaseController implements Serializable 
         });
     }
 
+    public void remove(){
+        service.remove(getForm().getDiasTrabalho());
+        getForm().setDiasTrabalho(criarLista());
+        addInfoMessage("relatorio.removido.sucesso");
+        disableDownload = Boolean.TRUE;
+        PrimeFaces.current().ajax().update("form:toolbarPanelGroup,form:editPanelGroup");
+    }
+
     private List<DiaTrabalho> internalBuscarDiasTrabalho(){
         return service.findAllByMesAno(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear());
     }
@@ -113,20 +111,31 @@ public class RelatorioController extends BaseController implements Serializable 
         DateUtils.daysOfMonth(getForm().getLocalDate().getYear(), getForm().getLocalDate().getMonthValue()).forEach(date -> {
             DiaTrabalho diaTrabalho = new DiaTrabalho();
             diaTrabalho.setDia(date);
-            diaTrabalho.setHoraEntrada(configuracao.getInicioExpediente());
-            diaTrabalho.setHoraSaida(configuracao.getFimExpediente());
-            diaTrabalho.setInicioIntervalo(configuracao.getInicioIntervalo());
-            diaTrabalho.setFimIntervalo(configuracao.getFimIntervalo());
-            diaTrabalho.setCredito(JornadaTrabalhoUtils.calcularCreditoDiario(diaTrabalho));
+            diaTrabalho.setHoraEntrada(obterHoraConfiguradaOuMin(date, configuracao.getInicioExpediente()));
+            diaTrabalho.setHoraSaida(obterHoraConfiguradaOuMin(date, configuracao.getFimExpediente()));
+            diaTrabalho.setInicioIntervalo(obterHoraConfiguradaOuMin(date, configuracao.getInicioIntervalo()));
+            diaTrabalho.setFimIntervalo(obterHoraConfiguradaOuMin(date, configuracao.getFimIntervalo()));
+            diaTrabalho.setCredito(0.0);
             novaLista.add(diaTrabalho);
         });
         return novaLista;
+    }
+
+    private LocalTime obterHoraConfiguradaOuMin(LocalDate localDate, LocalTime horaConfigurada) {
+        return desabilitarAtributo(localDate) ? LocalTime.MIN : horaConfigurada;
     }
 
     public void onCellEditListener(DiaTrabalho diaTrabalho) {
         diaTrabalho.setCredito(JornadaTrabalhoUtils.calcularCreditoDiario(diaTrabalho));
     }
 
+    public boolean disableCellEdit(DiaTrabalho diaTrabalho){
+        return desabilitarAtributo(diaTrabalho.getDia());
+    }
+
+    private boolean desabilitarAtributo(LocalDate localDate){
+        return DateUtils.isWeekend(localDate) && !habilitarFimDeSemana;
+    }
     @Getter
     private StreamedContent file;
 
@@ -140,19 +149,6 @@ public class RelatorioController extends BaseController implements Serializable 
 
     public Double getSomatorioCreditoDoRelatorioEmEdicao() {
         return getForm().getDiasTrabalho().stream().map(DiaTrabalho::getCredito).reduce(0.0, Double::sum);
-    }
-
-    @Getter
-    private StreamedContent novoArquivo;
-
-    public void obterNovoArquivo() {
-        try {
-            String resorceLocation = StringUtils.join("classpath:", BASE_REPORTS_PATH, "example.pdf");
-            InputStream stream = new FileInputStream(ResourceUtils.getFile(resorceLocation).getAbsolutePath());
-            novoArquivo = PFUtils.toStreamedContent(stream, MediaType.PDF, "example");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Getter
