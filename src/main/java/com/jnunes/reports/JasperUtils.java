@@ -1,6 +1,8 @@
 package com.jnunes.reports;
 
 import com.jnunes.core.commons.MediaType;
+import com.jnunes.core.commons.ValidationUtils;
+import com.jnunes.eponto.support.BaseValidate;
 import com.jnunes.eponto.support.EpontoException;
 import com.jnunes.springjsf.support.utils.PFUtils;
 import net.sf.jasperreports.engine.*;
@@ -9,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 import org.springframework.util.ResourceUtils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collections;
 import java.util.List;
@@ -16,10 +19,21 @@ import java.util.Map;
 
 import static com.jnunes.reports.ReportConsts.*;
 
-public class JasperUtils {
+public class JasperUtils extends ValidationUtils {
 
     protected static JRBeanCollectionDataSource dataSource =
             new JRBeanCollectionDataSource(Collections.singletonList(new Object()));
+
+    public static void salvarArquivoEmDiretorio(Map<String, Object> params, String templateName,
+                                                String fileName, String path) {
+        JasperPrint jasperPrint = getJasperPrint(params, templateName);
+        try {
+            File file = new File(path);
+            JasperExportManager.exportReportToPdfFile(jasperPrint, file.getAbsolutePath() +"\\" + fileName + ".pdf");
+        } catch (JRException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static StreamedContent getStreamedContent(Map<String, Object> params, String templateName,
         String fileName) {

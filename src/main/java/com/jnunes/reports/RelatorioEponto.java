@@ -1,7 +1,6 @@
 package com.jnunes.reports;
 
 import com.jnunes.core.commons.CommonsUtils;
-import com.jnunes.core.commons.Validate;
 import com.jnunes.core.commons.context.StaticContextAccessor;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.domain.Configuracao;
@@ -11,7 +10,6 @@ import com.jnunes.eponto.support.JornadaTrabalhoUtils;
 import com.jnunes.reports.vo.DiaTrabalhoVO;
 import com.jnunes.reports.vo.RelatorioVO;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 
@@ -45,12 +43,21 @@ public class RelatorioEponto extends JasperUtils {
     }
 
     public static StreamedContent obterRelatorio(List<DiaTrabalho> diasTrabalho) {
-        if (CollectionUtils.isNotEmpty(diasTrabalho)) {
-            RelatorioVO vo = criarEstruturaBaseRelatorio();
-            setInformacoesComplementares(vo, diasTrabalho);
-            return obterStreamedContent(vo, diasTrabalho.stream().map(DiaTrabalhoVO::new).collect(Collectors.toList()));
-        }
-        return null;
+        return validateNonEmptyThenGetValue(StreamedContent.class, diasTrabalho, () -> internalObterRelatorio(diasTrabalho));
+    }
+
+    public static void salvarRelatorioEmDisco(List<DiaTrabalho> diasTrabalho) {
+        RelatorioVO vo = criarEstruturaBaseRelatorio();
+        setInformacoesComplementares(vo, diasTrabalho);
+        dataSource = getCollectionDataSource(Collections.singletonList(new Object()));
+        Map<String, Object> empParams = getParametros(vo, diasTrabalho.stream().map(DiaTrabalhoVO::new).collect(Collectors.toList()));
+        salvarArquivoEmDiretorio(empParams, TEMPLATE_EPONTO, getFileName(),"C:\\Users\\jarnu\\Downloads\\pastarelatorio");
+    }
+
+    private static StreamedContent internalObterRelatorio(List<DiaTrabalho> diasTrabalho) {
+        RelatorioVO vo = criarEstruturaBaseRelatorio();
+        setInformacoesComplementares(vo, diasTrabalho);
+        return obterStreamedContent(vo, diasTrabalho.stream().map(DiaTrabalhoVO::new).collect(Collectors.toList()));
     }
 
     private static RelatorioVO criarEstruturaBaseRelatorio() {
@@ -67,11 +74,12 @@ public class RelatorioEponto extends JasperUtils {
     }
 
     private static void setInformacoesComplementares(RelatorioVO relatorio, List<DiaTrabalho> diasTrabalho) {
-        DiaTrabalho diaTrabalho = Objects.requireNonNull(diasTrabalho.stream().findFirst().orElse(null));
-        String dataFormatada = StringUtils.join(DateUtils.monthName(diaTrabalho.getDia()), "/",
-                diaTrabalho.getDia().getYear());
-        relatorio.setDataReferencia(dataFormatada);
-        relatorio.setCreditoAtual(JornadaTrabalhoUtils.calcularCreditoTotal(diasTrabalho));
-        relatorio.setCreditoTotal(0.0);
+        diasTrabalho.stream().findFirst().ifPresent(diaTrabalho -> {
+            String dataFormatada = StringUtils.join(DateUtils.monthName(diaTrabalho.getDia()), "/",
+                    diaTrabalho.getDia().getYear());
+            relatorio.setDataReferencia(dataFormatada);
+            relatorio.setCreditoAtual(JornadaTrabalhoUtils.calcularCreditoTotal(diasTrabalho));
+            relatorio.setCreditoTotal(0.0);
+        });
     }
 }

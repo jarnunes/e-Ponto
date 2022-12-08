@@ -1,7 +1,6 @@
 package com.jnunes.eponto.controller;
 
 import com.jnunes.core.commons.MediaType;
-import com.jnunes.core.commons.Validate;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.controller.vo.RelatorioPesquisaVO;
 import com.jnunes.eponto.domain.Configuracao;
@@ -10,11 +9,9 @@ import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.eponto.service.RelatorioServiceImpl;
 import com.jnunes.eponto.support.JornadaTrabalhoUtils;
 import com.jnunes.reports.RelatorioEponto;
-import com.jnunes.springjsf.support.utils.JSFUtils;
 import com.jnunes.springjsf.support.utils.PFUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,19 +19,21 @@ import org.springframework.util.ResourceUtils;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.jnunes.reports.ReportConsts.BASE_REPORTS_PATH;
 
 @Named
 @ManagedBean
+@ViewScoped
 public class RelatorioController extends BaseController implements Serializable {
 
     @Autowired
@@ -58,11 +57,10 @@ public class RelatorioController extends BaseController implements Serializable 
     public void beforeInit() {
         configuracao = configuracaoService.obterConfiguracao();
         validateNull(configuracao.getId(), () -> {
-            JSFUtils.addErrorMessage("configuracao.empty");
+            addErrorMessage("configuracao.empty");
             disabled = Boolean.TRUE;
         });
-        this.form = new Form();
-        disableDownload = Boolean.TRUE;
+        resetValues();
     }
 
     @PostConstruct
@@ -78,30 +76,41 @@ public class RelatorioController extends BaseController implements Serializable 
         editMode = Boolean.TRUE;
     }
 
-    public void cancel() {
+    public void resetValues() {
         editMode = Boolean.FALSE;
+        disableDownload = Boolean.TRUE;
+        form = new Form();
     }
 
     public void salvarRelatorio() {
         service.save(getForm().getDiasTrabalho());
         setRelatorioParaDownload();
-        JSFUtils.addInfoMessage("relatorio.salvo.sucesso");
+        addInfoMessage("relatorio.salvo.sucesso");
+    }
+
+    public void salvarNoDisco(){
+        RelatorioEponto.salvarRelatorioEmDisco(getForm().getDiasTrabalho());
     }
 
     private void setDiasTrabalho() {
-        List<DiaTrabalho> resultList = service.findAllByMesAno(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear());
-        getForm().setDiasTrabalho(CollectionUtils.isNotEmpty(resultList) ? resultList
-                : criarLista(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear()));
+        validateEmpty(getForm().getDiasTrabalho(), () -> getForm().setDiasTrabalho(criarLista()));
     }
 
     public void buscarRelatorio() {
-        getForm().setDiasTrabalho(service.findAllByMesAno(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear()));
-        disableDownload = CollectionUtils.isEmpty(getForm().getDiasTrabalho());
+        validateNonEmpty(internalBuscarDiasTrabalho(), diasTrabalho -> {
+            getForm().setDiasTrabalho(diasTrabalho);
+            setRelatorioParaDownload();
+            disableDownload = Boolean.FALSE;
+        });
     }
 
-    private List<DiaTrabalho> criarLista(final int mes, final int ano) {
+    private List<DiaTrabalho> internalBuscarDiasTrabalho(){
+        return service.findAllByMesAno(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear());
+    }
+
+    private List<DiaTrabalho> criarLista() {
         List<DiaTrabalho> novaLista = new ArrayList<>();
-        DateUtils.daysOfMonth(ano, mes).forEach(date -> {
+        DateUtils.daysOfMonth(getForm().getLocalDate().getYear(), getForm().getLocalDate().getMonthValue()).forEach(date -> {
             DiaTrabalho diaTrabalho = new DiaTrabalho();
             diaTrabalho.setDia(date);
             diaTrabalho.setHoraEntrada(configuracao.getInicioExpediente());
@@ -121,11 +130,12 @@ public class RelatorioController extends BaseController implements Serializable 
     @Getter
     private StreamedContent file;
 
+    public StreamedContent obterArquivo(){
+        return file;
+    }
     private void setRelatorioParaDownload() {
         disableDownload = getForm().getDiasTrabalho().stream().allMatch(diaTrabalho -> diaTrabalho.getId() == null);
-        Validate.condition(!disableDownload).then(() ->
-                file = RelatorioEponto.obterRelatorio(getForm().getDiasTrabalho()));
-
+        file = RelatorioEponto.obterRelatorio(getForm().getDiasTrabalho());
     }
 
     public Double getSomatorioCreditoDoRelatorioEmEdicao() {
@@ -138,20 +148,23 @@ public class RelatorioController extends BaseController implements Serializable 
     public void obterNovoArquivo() {
         try {
             String resorceLocation = StringUtils.join("classpath:", BASE_REPORTS_PATH, "example.pdf");
-            InputStream stream = this.getClass().getResourceAsStream(ResourceUtils.getFile(resorceLocation).getAbsolutePath());
-            novoArquivo = PFUtils.toStreamedContent(stream, MediaType.PDF, "example.pdf");
+            InputStream stream = new FileInputStream(ResourceUtils.getFile(resorceLocation).getAbsolutePath());
+            novoArquivo = PFUtils.toStreamedContent(stream, MediaType.PDF, "example");
         } catch (FileNotFoundException e) {
-            //
+            throw new RuntimeException(e);
         }
     }
-
 
     @Getter
     @Setter
     public static class Form {
-        List<RelatorioPesquisaVO> relatorios;
         private LocalDate localDate;
         private List<DiaTrabalho> diasTrabalho;
+
+        public Form(){
+            this.diasTrabalho = new ArrayList<>();
+            this.localDate = null;
+        }
     }
 
 }

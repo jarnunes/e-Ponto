@@ -2,6 +2,7 @@ package com.jnunes.eponto.controller;
 
 import com.jnunes.core.commons.Msg;
 import com.jnunes.eponto.support.BaseValidate;
+import com.jnunes.springjsf.support.utils.JSFUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
@@ -29,5 +30,22 @@ public abstract class BaseController extends BaseValidate implements Serializabl
         params.put(key, value);
         this.setViewParams(params);
     }
+
+    protected void addErrorMessage(final String messageKey, final Object... arguments) {
+        JSFUtils.addErrorMessage(messageKey, arguments);
+    }
+
+    protected  void addWarningMessage(final String messageKey, final Object... arguments) {
+        JSFUtils.addWarningMessage(messageKey, arguments);
+    }
+
+    protected  void addInfoMessage(final String messageKey, final Object... arguments) {
+        JSFUtils.addInfoMessage(messageKey, arguments);
+    }
+
+    protected void addFatalMessage(final String messageKey, final Object... arguments) {
+        JSFUtils.addFatalMessage(messageKey, arguments);
+    }
+
 
 }

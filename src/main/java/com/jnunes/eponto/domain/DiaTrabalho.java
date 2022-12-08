@@ -1,6 +1,6 @@
 package com.jnunes.eponto.domain;
 
-import com.jnunes.core.commons.Utils;
+import com.jnunes.core.commons.CommonsUtils;
 import com.jnunes.core.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,6 +35,6 @@ public class DiaTrabalho extends BaseEntity {
     private String observacao;
 
     public void setCredito(Double credito) {
-        this.credito = Utils.setScale(credito);
+        this.credito = CommonsUtils.setScale(credito);
     }
 }

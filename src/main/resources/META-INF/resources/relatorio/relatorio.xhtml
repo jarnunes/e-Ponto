@@ -19,17 +19,13 @@
                 action="#{controller.continuar()}" rendered="#{not controller.editMode}"
                 update="@form" disabled="#{controller.disabled}"/>
             <p:commandButton id="cancel" icon="bi bi-arrow-left" styleClass="mr-1"
-                action="#{controller.cancel()}" update="@form" rendered="#{controller.editMode}"/>
+                action="#{controller.resetValues()}" update="@form" rendered="#{controller.editMode}"/>
             <p:commandButton id="save" value="#{msg['save']}" styleClass="mr-1"
                 action="#{controller.salvarRelatorio()}" rendered="#{controller.editMode}"
                 update="form:toolbarPanelGroup"/>
-            <p:commandButton id="download" value="#{msg['relatorio.download']}"
+            <p:commandButton id="download" value="#{msg['relatorio.download']}" ajax="false"
                 styleClass="mr-1" icon="bi bi-file-earmark-text" disabled="#{controller.disableDownload}">
-                <p:fileDownload value="#{controller.file}"/>
-            </p:commandButton>
-            <p:commandButton id="novodownload" value="Novo Download"
-                             styleClass="mr-1" icon="bi bi-file-earmark-text" disabled="#{controller.disableDownload}">
-                <p:fileDownload value="#{relatorioController.novoArquivo}"/>
+                <p:fileDownload value="#{relatorioController.obterArquivo()}"/>
             </p:commandButton>
         </p:toolbarGroup>
     </ui:define>
@@ -38,8 +34,10 @@
         <jn:inputGroupBtnSearch id="data" label="Data" action="#{relatorioController.buscarRelatorio()}"
                                 styleClass="col-12" update="form:resultPanelGroup form:toolbarPanelGroup" required="true"
                                 disabled="#{relatorioController.disabled}">
-            <jn:dateTime id="dateTime" value="#{relatorioController.form.localDate}" pattern="MM/yyyy" required="true"
-                         styleClass=" " disabled="#{relatorioController.disabled}"/>
+            <p:datePicker id="dateTime" value="#{relatorioController.form.localDate}" pattern="MM/yyyy" required="true"
+                         styleClass=" " disabled="#{relatorioController.disabled}">
+                <p:ajax process="@this" immediate="true" />
+            </p:datePicker>
         </jn:inputGroupBtnSearch>
     </ui:define>
 
@@ -49,16 +47,20 @@
 
             <p:columnGroup type="header">
                 <p:row>
-                    <p:column headerText="Dia" style="width: 100px; text-align: center" styleClass="tcenter"/>
-                    <p:column headerText="Entrada" style="width: 100px; text-align: center"/>
+                    <p:column  headerText="Dia" rowspan="2" style="width: 100px; text-align: center" styleClass="tcenter"/>
+                    <p:column headerText="Entrada" rowspan="2" style="width: 100px; text-align: center"/>
                     <p:column headerText="Intervalo" colspan="2" style="width: 200px; text-align: center"/>
-                    <p:column headerText="Saída" style="width: 100px; text-align: center"/>
-                    <p:column headerText="Crédito" style="width: 100px; text-align: center"/>
-                    <p:column headerText="Observação"/>
+                    <p:column headerText="Saída" rowspan="2" style="width: 100px; text-align: center"/>
+                    <p:column headerText="Crédito" rowspan="2" style="width: 100px; text-align: center"/>
+                    <p:column headerText="Observação" rowspan="2"/>
+                </p:row>
+                <p:row>
+                    <p:column headerText="Início" style="width: 100px; text-align: center"/>
+                    <p:column headerText="Fim" style="width: 200px; text-align: center"/>
                 </p:row>
             </p:columnGroup>
 
-            <jt:column id="diaTrabalho" value="#{help.toDay(diaTrabalho.dia)}"/>
+            <jt:column id="diaTrabalho" value="#{help.toDay(diaTrabalho.dia)}" style="text-align: center"/>
             <jt:column id="entrada" value="#{diaTrabalho.horaEntrada}"/>
             <jt:column id="inicioIntervalo" value="#{diaTrabalho.inicioIntervalo}"/>
             <jt:column id="fimIntervalo" value="#{diaTrabalho.fimIntervalo}"/>
@@ -80,15 +82,18 @@
         <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.form.localDate}" styleClass="col-12">
             <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.form.diasTrabalho}"
                          editMode="cell" editable="true" widgetVar="diasTrabalho">
-
                 <p:columnGroup type="header">
                     <p:row>
-                        <p:column headerText="Dia" style="width: 100px; text-align: center"/>
-                        <p:column headerText="Entrada" style="width: 100px; text-align: center"/>
+                        <p:column  headerText="Dia" rowspan="2" style="width: 100px; text-align: center" styleClass="tcenter"/>
+                        <p:column headerText="Entrada" rowspan="2" style="width: 100px; text-align: center"/>
                         <p:column headerText="Intervalo" colspan="2" style="width: 200px; text-align: center"/>
-                        <p:column headerText="Saída" style="width: 100px; text-align: center"/>
-                        <p:column headerText="Crédito" style="width: 100px; text-align: center"/>
-                        <p:column headerText="Observação"/>
+                        <p:column headerText="Saída" rowspan="2" style="width: 100px; text-align: center"/>
+                        <p:column headerText="Crédito" rowspan="2" style="width: 100px; text-align: center"/>
+                        <p:column headerText="Observação" rowspan="2"/>
+                    </p:row>
+                    <p:row>
+                        <p:column headerText="Início" style="width: 100px; text-align: center"/>
+                        <p:column headerText="Fim" style="width: 200px; text-align: center"/>
                     </p:row>
                 </p:columnGroup>
 
