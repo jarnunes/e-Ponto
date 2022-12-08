@@ -1,6 +1,6 @@
 package com.jnunes.eponto.support;
 
-import com.jnunes.core.commons.Utils;
+import com.jnunes.core.commons.CommonsUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.ApplicationScope;
 
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class Help {
 
     public Integer toDay(LocalDate localDate) {
-        return Utils.toDay(localDate);
+        return CommonsUtils.toDay(localDate);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.jnunes.eponto.controller;
 
+import com.jnunes.core.commons.Validate;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.controller.vo.RelatorioPesquisaVO;
 import com.jnunes.eponto.domain.Configuracao;
@@ -34,12 +35,7 @@ public class RelatorioController extends BaseController implements Serializable 
     @Getter
     @Setter
     private Configuracao configuracao;
-    @Getter
-    @Setter
-    private LocalDate localDate;
-    @Getter
-    @Setter
-    private List<DiaTrabalho> diasTrabalho;
+
     @Getter
     @Setter
     private Form form;
@@ -52,20 +48,14 @@ public class RelatorioController extends BaseController implements Serializable 
 
     public void beforeInit() {
         configuracao = configuracaoService.obterConfiguracao();
-        if(configuracao.getId() == null){
+        Validate.condition(Objects.isNull(configuracao.getId())).then(() -> {
             JSFUtils.addErrorMessage("configuracao.empty");
             disabled = Boolean.TRUE;
-        }
-        localDate = LocalDate.now();
+        });
+        this.form = new Form();
         disableDownload = Boolean.TRUE;
     }
 
-    @PostConstruct
-    public void postConstruct() {
-//        localDate = LocalDate.now();
-        form = new Form();
-        diasTrabalho = new ArrayList<>();
-    }
 
     public void continuar() {
         setDiasTrabalho();
@@ -78,26 +68,20 @@ public class RelatorioController extends BaseController implements Serializable 
     }
 
     public void salvarRelatorio() {
-        service.save(diasTrabalho);
+        service.save(getForm().getDiasTrabalho());
         setRelatorioParaDownload();
         JSFUtils.addInfoMessage("relatorio.salvo.sucesso");
     }
 
     private void setDiasTrabalho() {
-        List<DiaTrabalho> resultList = service.findAllByMesAno(localDate.getMonthValue(), localDate.getYear());
-        diasTrabalho = CollectionUtils.isNotEmpty(resultList) ? resultList
-                : criarLista(localDate.getMonthValue(), localDate.getYear());
+        List<DiaTrabalho> resultList = service.findAllByMesAno(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear());
+        getForm().setDiasTrabalho(CollectionUtils.isNotEmpty(resultList) ? resultList
+                : criarLista(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear()));
     }
 
     public void buscarRelatorio() {
-        setDiasTrabalho(service.findAllByMesAno(localDate.getMonthValue(), localDate.getYear()));
-        getDiasTrabalho().stream().findFirst().ifPresent(diaTrabalho -> {
-            RelatorioPesquisaVO relatorio = new RelatorioPesquisaVO();
-            relatorio.setId(diaTrabalho.getId());
-            relatorio.setReferencia(DateUtils.monthName(diaTrabalho.getDia()) + "/" + diaTrabalho.getDia().getYear());
-            relatorio.setDiasTrabalho(diasTrabalho);
-            getForm().setRelatorios(Collections.singletonList(relatorio));
-        });
+        getForm().setDiasTrabalho(service.findAllByMesAno(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear()));
+        disableDownload = CollectionUtils.isEmpty(getForm().getDiasTrabalho());
     }
 
     private List<DiaTrabalho> criarLista(final int mes, final int ano) {
@@ -123,20 +107,22 @@ public class RelatorioController extends BaseController implements Serializable 
     private StreamedContent file;
 
     private void setRelatorioParaDownload() {
-        disableDownload = diasTrabalho.stream().allMatch(diaTrabalho -> diaTrabalho.getId() == null);
-        if (!disableDownload) {
-            file = RelatorioEponto.obterRelatorio(diasTrabalho);
-        }
+        disableDownload = getForm().getDiasTrabalho().stream().allMatch(diaTrabalho -> diaTrabalho.getId() == null);
+        Validate.condition(!disableDownload).then(() ->
+            file = RelatorioEponto.obterRelatorio(getForm().getDiasTrabalho()));
+
     }
 
     public Double getSomatorioCreditoDoRelatorioEmEdicao() {
-        return diasTrabalho.stream().map(DiaTrabalho::getCredito).reduce(0.0, Double::sum);
+        return getForm().getDiasTrabalho().stream().map(DiaTrabalho::getCredito).reduce(0.0, Double::sum);
     }
 
     @Getter
     @Setter
     public static class Form {
         List<RelatorioPesquisaVO> relatorios;
+        private LocalDate localDate;
+        private List<DiaTrabalho> diasTrabalho;
     }
 
 }

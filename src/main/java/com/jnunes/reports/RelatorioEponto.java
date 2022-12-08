@@ -1,6 +1,7 @@
 package com.jnunes.reports;
 
-import com.jnunes.core.commons.Utils;
+import com.jnunes.core.commons.CommonsUtils;
+import com.jnunes.core.commons.Validate;
 import com.jnunes.core.commons.context.StaticContextAccessor;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.domain.Configuracao;
@@ -14,10 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.jnunes.reports.ReportConsts.*;
@@ -39,9 +37,9 @@ public class RelatorioEponto extends JasperUtils {
     }
 
     private static Map<String, Object> getParametros(RelatorioVO relatorio, List<DiaTrabalhoVO> diasTrabalho) {
-        Map<String, Object> empParams = Utils.toMap(relatorio);
-        empParams.put(REL_LOGOMARCA, Utils.toInputStream(relatorio.getLogomarca()));
-        empParams.put(REL_ASSINATURA, Utils.toInputStream(relatorio.getAssinatura()));
+        Map<String, Object> empParams = CommonsUtils.toMap(relatorio);
+        empParams.put(REL_LOGOMARCA, CommonsUtils.toInputStream(relatorio.getLogomarca()));
+        empParams.put(REL_ASSINATURA, CommonsUtils.toInputStream(relatorio.getAssinatura()));
         empParams.put(DATA_SOURCE, new JRBeanCollectionDataSource(diasTrabalho));
         return empParams;
     }

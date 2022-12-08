@@ -11,7 +11,6 @@
         <f:viewAction action="#{relatorioController.beforeInit()}"/>
     </f:metadata>
 
-    <ui:param name="controller" value="#{relatorioController}"/>
     <ui:define name="toolbar">
         <c:set var="controller" value="#{relatorioController}"/>
         <p:toolbarGroup id="toolbarGroup">
@@ -35,63 +34,47 @@
         <jn:inputGroupBtnSearch id="data" label="Data" action="#{relatorioController.buscarRelatorio()}"
                                 styleClass="col-12" update="form:resultPanelGroup form:toolbarPanelGroup" required="true"
                                 disabled="#{relatorioController.disabled}">
-            <jn:dateTime id="dateTime" value="#{relatorioController.localDate}" pattern="MM/yyyy" required="true"
+            <jn:dateTime id="dateTime" value="#{relatorioController.form.localDate}" pattern="MM/yyyy" required="true"
                          styleClass=" " disabled="#{relatorioController.disabled}"/>
         </jn:inputGroupBtnSearch>
     </ui:define>
 
     <ui:define name="resultPanel">
-        <p:dataTable var="row" rowKey="#{row.id}" value="#{relatorioController.form.relatorios}"
-                     emptyMessage="Nenhum registro encontrado!">
-            <p:column style="width: 5px ">
-                <p:rowToggler/>
-            </p:column>
-            <p:column headerText="Referência" style="width: 20px">
-                <h:outputText value="#{row.referencia}"/>
-            </p:column>
-            <p:column headerText="Crédito" style="width: 70px">
-                <h:outputText value="#{row.credito}"/>
-            </p:column>
-            <p:rowExpansion styleClass="col-12">
-                <p:dataTable id="datatableRowExpansion" var="diaTrabalho" value="#{row.diasTrabalho}">
-                    <p:column headerText="Dia" style="width: 20px">
-                        <h:outputText value="#{help.toDay(diaTrabalho.dia)}"/>
-                    </p:column>
+        <p:dataTable var="diaTrabalho" value="#{relatorioController.form.diasTrabalho}"
+            emptyMessage="Nenhum registro encontrado!">
 
-                    <p:column headerText="Entrada" style="width: 70px">
-                        <h:outputText value="#{diaTrabalho.horaEntrada}"/>
-                    </p:column>
+            <p:columnGroup type="header">
+                <p:row>
+                    <p:column headerText="Dia" style="width: 100px; text-align: center" styleClass="tcenter"/>
+                    <p:column headerText="Entrada" style="width: 100px; text-align: center"/>
+                    <p:column headerText="Intervalo" colspan="2" style="width: 200px; text-align: center"/>
+                    <p:column headerText="Saída" style="width: 100px; text-align: center"/>
+                    <p:column headerText="Crédito" style="width: 100px; text-align: center"/>
+                    <p:column headerText="Observação"/>
+                </p:row>
+            </p:columnGroup>
 
-                    <p:column headerText="Inícios" style="width: 70px">
-                        <h:outputText value="#{diaTrabalho.inicioIntervalo}"/>
-                    </p:column>
+            <jt:column id="diaTrabalho" value="#{help.toDay(diaTrabalho.dia)}"/>
+            <jt:column id="entrada" value="#{diaTrabalho.horaEntrada}"/>
+            <jt:column id="inicioIntervalo" value="#{diaTrabalho.inicioIntervalo}"/>
+            <jt:column id="fimIntervalo" value="#{diaTrabalho.fimIntervalo}"/>
+            <jt:column id="saida" value="#{diaTrabalho.horaSaida}"/>
+            <jt:column id="credito" value="#{diaTrabalho.credito}"/>
+            <jt:column id="observacao" value="#{diaTrabalho.observacao}"/>
+         </p:dataTable>
 
-                    <p:column headerText="Fim" style="width: 70px">
-                        <h:outputText value="#{diaTrabalho.fimIntervalo}"/>
-                    </p:column>
-
-                    <p:column headerText="Saída" style="width: 70px">
-                        <h:outputText value="#{diaTrabalho.horaSaida}"/>
-                    </p:column>
-
-                    <p:column headerText="Crédito" style="width: 70px">
-                        <h:outputText value="#{diaTrabalho.credito}"/>
-                    </p:column>
-                    <p:column headerText="Observação">
-                        <h:outputText value="#{diaTrabalho.observacao}"/>
-                    </p:column>
-
-
-                </p:dataTable>
-            </p:rowExpansion>
-        </p:dataTable>
+        <h:outputStylesheet>
+            body .tcenter{
+                text-align: center !important;
+            }
+        </h:outputStylesheet>
     </ui:define>
 
     <ui:define name="editPanel">
         <c:set var="pageTitle" value="${msg['relatorio.title']}" scope="request"/>
 
-        <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.localDate}" styleClass="col-12">
-            <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.diasTrabalho}"
+        <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.form.localDate}" styleClass="col-12">
+            <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.form.diasTrabalho}"
                          editMode="cell" editable="true" widgetVar="diasTrabalho">
 
                 <p:columnGroup type="header">
