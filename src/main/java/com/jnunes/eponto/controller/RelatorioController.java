@@ -1,5 +1,6 @@
 package com.jnunes.eponto.controller;
 
+import com.jnunes.core.commons.MediaType;
 import com.jnunes.core.commons.Validate;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.controller.vo.RelatorioPesquisaVO;
@@ -9,20 +10,28 @@ import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.eponto.service.RelatorioServiceImpl;
 import com.jnunes.eponto.support.JornadaTrabalhoUtils;
 import com.jnunes.reports.RelatorioEponto;
-import com.jnunes.springjsf.controller.BaseController;
 import com.jnunes.springjsf.support.utils.JSFUtils;
+import com.jnunes.springjsf.support.utils.PFUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static com.jnunes.reports.ReportConsts.BASE_REPORTS_PATH;
 
 @Named
 @ManagedBean
@@ -48,7 +57,7 @@ public class RelatorioController extends BaseController implements Serializable 
 
     public void beforeInit() {
         configuracao = configuracaoService.obterConfiguracao();
-        Validate.condition(Objects.isNull(configuracao.getId())).then(() -> {
+        validateNull(configuracao.getId(), () -> {
             JSFUtils.addErrorMessage("configuracao.empty");
             disabled = Boolean.TRUE;
         });
@@ -56,10 +65,16 @@ public class RelatorioController extends BaseController implements Serializable 
         disableDownload = Boolean.TRUE;
     }
 
+    @PostConstruct
+    public void postConstruct() {
+        this.file = null;
+        this.novoArquivo = null;
+    }
 
     public void continuar() {
         setDiasTrabalho();
         setRelatorioParaDownload();
+        obterNovoArquivo();
         editMode = Boolean.TRUE;
     }
 
@@ -109,13 +124,27 @@ public class RelatorioController extends BaseController implements Serializable 
     private void setRelatorioParaDownload() {
         disableDownload = getForm().getDiasTrabalho().stream().allMatch(diaTrabalho -> diaTrabalho.getId() == null);
         Validate.condition(!disableDownload).then(() ->
-            file = RelatorioEponto.obterRelatorio(getForm().getDiasTrabalho()));
+                file = RelatorioEponto.obterRelatorio(getForm().getDiasTrabalho()));
 
     }
 
     public Double getSomatorioCreditoDoRelatorioEmEdicao() {
         return getForm().getDiasTrabalho().stream().map(DiaTrabalho::getCredito).reduce(0.0, Double::sum);
     }
+
+    @Getter
+    private StreamedContent novoArquivo;
+
+    public void obterNovoArquivo() {
+        try {
+            String resorceLocation = StringUtils.join("classpath:", BASE_REPORTS_PATH, "example.pdf");
+            InputStream stream = this.getClass().getResourceAsStream(ResourceUtils.getFile(resorceLocation).getAbsolutePath());
+            novoArquivo = PFUtils.toStreamedContent(stream, MediaType.PDF, "example.pdf");
+        } catch (FileNotFoundException e) {
+            //
+        }
+    }
+
 
     @Getter
     @Setter

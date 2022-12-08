@@ -26,7 +26,7 @@ public class JasperUtils {
         JasperPrint jasperPrint = getJasperPrint(params, templateName);
         try {
             byte[] relatorio = JasperExportManager.exportReportToPdf(jasperPrint);
-            return PFUtils.toStreamedContent(relatorio, com.jnunes.core.commons.MediaType.PDF, fileName);
+            return PFUtils.toStreamedContent(relatorio, MediaType.PDF, fileName);
         } catch (JRException e) {
             throw new RuntimeException(e);
         }
