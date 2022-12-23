@@ -32,6 +32,10 @@ public class JornadaTrabalhoUtils {
     public static Duration calcularCreditoTotalDaLista(List<DiaTrabalho> diasTrabalho) {
         return diasTrabalho.stream().map(JornadaTrabalhoUtils::obterCreditoDiario).reduce(Duration.ZERO, Duration::plus);
     }
+    public static Double somarCreditoDaLista(List<DiaTrabalho> diasTrabalho) {
+        return diasTrabalho.stream().map(DiaTrabalho::getCredito).reduce(0.0, Double::sum);
+    }
+
 
     public static Duration duracaoTrabalhoDoDia(DiaTrabalho diaTrabalho) {
         return Duration.between(diaTrabalho.getHoraEntrada(), diaTrabalho.getHoraSaida());

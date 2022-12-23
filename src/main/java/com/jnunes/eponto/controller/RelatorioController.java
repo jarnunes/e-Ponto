@@ -87,11 +87,18 @@ public class RelatorioController extends BaseController implements Serializable 
     }
 
     public void buscarRelatorio() {
-        validateNonEmpty(internalBuscarDiasTrabalho(), diasTrabalho -> {
-            getForm().setDiasTrabalho(diasTrabalho);
-            setRelatorioParaDownload();
-            disableDownload = Boolean.FALSE;
-        });
+        validateNonEmptyOrElse(internalBuscarDiasTrabalho(), this::setInformacoesCasoLocalizadoRegistros,
+            this::setInformacoesCasoNaoLocalizadoRegistros);
+    }
+
+    private void setInformacoesCasoLocalizadoRegistros(List<DiaTrabalho> diasTrabalho){
+        getForm().setDiasTrabalho(diasTrabalho);
+        setRelatorioParaDownload();
+        disableDownload = Boolean.FALSE;
+    }
+
+    private void setInformacoesCasoNaoLocalizadoRegistros(){
+        addWarningMessage("relatorio.sem.registro.para.data.informada", DateUtils.dateMonthFormat(getForm().getLocalDate()));
     }
 
     public void remove(){
@@ -148,7 +155,7 @@ public class RelatorioController extends BaseController implements Serializable 
     }
 
     public Double getSomatorioCreditoDoRelatorioEmEdicao() {
-        return getForm().getDiasTrabalho().stream().map(DiaTrabalho::getCredito).reduce(0.0, Double::sum);
+        return JornadaTrabalhoUtils.somarCreditoDaLista(getForm().getDiasTrabalho());
     }
 
     @Getter

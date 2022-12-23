@@ -15,7 +15,7 @@
         <c:set var="controller" value="#{relatorioController}"/>
         <p:toolbarGroup id="toolbarGroup">
             <p:commandButton id="continuar" value="#{msg[controller.disableDownload
-                ? 'relatorio.novo' : 'relatorio.edit']}" icon="bi bi-plus-lg" styleClass="mr-1"
+                ? 'relatorio.novo' : 'relatorio.edit']}" icon="#{controller.disableDownload ? 'bi bi-plus-lg' : 'bi bi-pen'}" styleClass="mr-1"
                 action="#{controller.continuar()}" rendered="#{not controller.editMode}"
                 update="@form" disabled="#{controller.disabled}"/>
             <p:commandButton id="cancel" icon="bi bi-arrow-left" styleClass="mr-1"
@@ -24,16 +24,14 @@
                 action="#{controller.salvarRelatorio()}" rendered="#{controller.editMode}"
                 update="form:toolbarPanelGroup"/>
             <p:commandButton id="download" value="#{msg['relatorio.download']}" ajax="false"
-                styleClass="mr-1" icon="bi bi-file-earmark-text" disabled="#{controller.disableDownload}">
+                styleClass="mr-1" icon="bi bi-download" disabled="#{controller.disableDownload}">
                 <p:fileDownload value="#{relatorioController.obterArquivo()}"/>
             </p:commandButton>
             <p:commandButton id="remove" action="#{controller.remove}" immediate="true" rendered="#{controller.editMode}"
                 styleClass="mr-1" icon="bi bi-trash-fill" disabled="#{controller.disableDownload }"
             update="@form">
-                <p:confirm header="#{msg['relatorio.dialog.confirm.header']}" message="#{msg['relatorio.dialog.confirm.message']}"
-                />
+                <p:confirm header="#{msg['relatorio.dialog.confirm.header']}" message="#{msg['relatorio.dialog.confirm.message']}" />
             </p:commandButton>
-
 
             <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
                 <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
@@ -108,6 +106,7 @@
             <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.form.diasTrabalho}"
                          editMode="cell" editable="true" widgetVar="diasTrabalho">
                 <c:set var="disableCellEdit" value="#{controller.disableCellEdit(dia)}" />
+                <c:set var="backgroudCell" value="#{disableCellEdit? '#e5e5e5;':'initial;'}" />
                 <p:columnGroup type="header">
                     <p:row>
                         <p:column headerText="#{msg['relatorio.header.text.dia']}" rowspan="2" style="width: 100px; text-align: center" styleClass="tcenter"/>
@@ -123,11 +122,11 @@
                     </p:row>
                 </p:columnGroup>
 
-                <p:column style="text-align: center">
+                <p:column style="text-align: center; background-color: #{backgroudCell}">
                     <h:outputText value="#{help.toDay(dia.dia)}" style=""/>
                 </p:column>
 
-                <p:column styleClass="time-column-edit" style="text-align: center">
+                <p:column styleClass="time-column-edit" style="text-align: center; background-color: #{backgroudCell}">
                     <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.horaEntrada}"/>
@@ -141,8 +140,7 @@
                     </p:cellEditor>
                 </p:column>
 
-                <p:column styleClass="time-column-edit"
-                          style="text-align: center">
+                <p:column styleClass="time-column-edit" style="text-align: center; background-color: #{backgroudCell}">
                     <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.inicioIntervalo}"/>
@@ -156,8 +154,7 @@
                     </p:cellEditor>
                 </p:column>
 
-                <p:column styleClass="time-column-edit"
-                          style="text-align: center">
+                <p:column styleClass="time-column-edit" style="text-align: center; background-color: #{backgroudCell}">
                     <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.fimIntervalo}"/>
@@ -171,7 +168,7 @@
                     </p:cellEditor>
                 </p:column>
 
-                <p:column styleClass="time-column-edit" style="width: 100px; text-align: center">
+                <p:column styleClass="time-column-edit" style="width: 100px; text-align: center; background-color: #{backgroudCell}">
                     <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.horaSaida}"/>
@@ -185,7 +182,7 @@
                     </p:cellEditor>
                 </p:column>
 
-                <p:column styleClass="time-column-edit" style="width: 100px; text-align: center">
+                <p:column styleClass="time-column-edit" style="width: 100px; text-align: center; background-color: #{backgroudCell}">
                     <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.credito}"/>
@@ -196,7 +193,7 @@
                     </p:cellEditor>
                 </p:column>
 
-                <p:column headerText="Observação">
+                <p:column headerText="Observação" style="background-color: #{backgroudCell}">
                     <p:cellEditor disabled="#{disableCellEdit}">
                         <f:facet name="output">
                             <h:outputText value="#{dia.observacao}"/>

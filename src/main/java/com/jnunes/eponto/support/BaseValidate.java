@@ -30,7 +30,7 @@ public abstract class BaseValidate {
         ValidationUtils.validateEmpty(collection, action);
     }
 
-    protected <T>void validateNonEmptyOrElse(List<T> collection, Consumer<Object> ifConsumer, Runnable elseAction) {
+    protected <T>void validateNonEmptyOrElse(List<T> collection, Consumer<List<T>> ifConsumer, Runnable elseAction) {
        ValidationUtils.validateNonEmptyOrElse(collection, ifConsumer, elseAction);
     }
 
