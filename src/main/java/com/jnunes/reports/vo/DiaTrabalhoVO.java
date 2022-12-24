@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -24,6 +25,8 @@ public class DiaTrabalhoVO {
     private String credito;
     private String observacao;
 
+    private Boolean isWeekend;
+
     public DiaTrabalhoVO(DiaTrabalho diaTrabalho, Boolean habilitarFimDeSemana) {
         LocalDate date = diaTrabalho.getDia();
         this.dia = diaTrabalho.getDia().getDayOfMonth();
@@ -33,6 +36,7 @@ public class DiaTrabalhoVO {
         this.fimIntervalo = toStringOrWeekDay(diaTrabalho.getFimIntervalo(), date);
         this.credito = toString(diaTrabalho.getCredito());
         this.observacao = StringUtils.trimToEmpty(diaTrabalho.getObservacao());
+        this.isWeekend = DateUtils.isWeekend(date);
     }
 
     public DiaTrabalhoVO(DiaTrabalho diaTrabalho) {
@@ -43,6 +47,7 @@ public class DiaTrabalhoVO {
         this.fimIntervalo = toString(diaTrabalho.getFimIntervalo());
         this.credito = toString(diaTrabalho.getCredito());
         this.observacao = StringUtils.trimToEmpty(diaTrabalho.getObservacao());
+        this.isWeekend = DateUtils.isWeekend(diaTrabalho.getDia());
     }
 
     private String toString(Object localTime) {

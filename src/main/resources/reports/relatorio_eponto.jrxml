@@ -5,7 +5,7 @@
 	<style name="alternativeColor">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2==0]]></conditionExpression>
-			<style mode="Opaque" backcolor="#E88887"/>
+			<style mode="Opaque" backcolor="#F0F0F0"/>
 		</conditionalStyle>
 	</style>
 	<subDataset name="diasTrabalho" uuid="0d163f14-fd28-4fdd-9528-8fb7cce10860">
@@ -16,6 +16,7 @@
 		<field name="fimIntervalo" class="java.lang.String"/>
 		<field name="credito" class="java.lang.String"/>
 		<field name="observacao" class="java.lang.String"/>
+		<field name="isWeekend" class="java.lang.Boolean"/>
 	</subDataset>
 	<parameter name="empresa" class="java.lang.String"/>
 	<parameter name="endereco" class="java.lang.String"/>
@@ -213,7 +214,7 @@
 	<detail>
 		<band height="70" splitType="Stretch">
 			<componentElement>
-				<reportElement style="alternativeColor" mode="Transparent" x="1" y="2" width="570" height="68" backcolor="#FFFFFF" uuid="91386963-82e5-4ae1-b0b3-f2ce88f9d3c3">
+				<reportElement style="alternativeColor" mode="Opaque" x="1" y="2" width="570" height="68" uuid="91386963-82e5-4ae1-b0b3-f2ce88f9d3c3">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
@@ -241,7 +242,13 @@
 								<pen lineWidth="0.075"/>
 							</box>
 							<textField>
-								<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="30" height="20" backcolor="#FFFFFF" uuid="06a60daa-c1d9-403a-b8a0-e904a7d2f8a7"/>
+								<reportElement style="alternativeColor" mode="Opaque" x="0" y="0" width="30" height="20" uuid="06a60daa-c1d9-403a-b8a0-e904a7d2f8a7"/>
+								<box>
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{dia}]]></textFieldExpression>
 							</textField>
@@ -268,7 +275,13 @@
 								<pen lineWidth="0.075"/>
 							</box>
 							<textField>
-								<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="60" height="20" backcolor="#FFFFFF" uuid="afac1bbc-131b-4bb0-b20a-d94c31fd85de"/>
+								<reportElement style="alternativeColor" mode="Opaque" x="0" y="0" width="60" height="20" uuid="afac1bbc-131b-4bb0-b20a-d94c31fd85de"/>
+								<box>
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{entrada}]]></textFieldExpression>
 							</textField>
@@ -307,7 +320,13 @@
 									<pen lineWidth="0.075"/>
 								</box>
 								<textField>
-									<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="60" height="20" backcolor="#FFFFFF" uuid="b311942d-55a3-4a0f-892f-a9084e37a63d"/>
+									<reportElement style="alternativeColor" mode="Opaque" x="0" y="0" width="60" height="20" uuid="b311942d-55a3-4a0f-892f-a9084e37a63d"/>
+									<box>
+										<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
 									<textElement textAlignment="Center" verticalAlignment="Middle"/>
 									<textFieldExpression><![CDATA[$F{inicioIntervalo}]]></textFieldExpression>
 								</textField>
@@ -334,7 +353,13 @@
 									<pen lineWidth="0.075"/>
 								</box>
 								<textField>
-									<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="60" height="20" backcolor="#FFFFFF" uuid="03bf7ba5-32db-4854-b34f-30b7190c129a"/>
+									<reportElement style="alternativeColor" mode="Opaque" x="0" y="0" width="60" height="20" uuid="03bf7ba5-32db-4854-b34f-30b7190c129a"/>
+									<box>
+										<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
 									<textElement textAlignment="Center" verticalAlignment="Middle"/>
 									<textFieldExpression><![CDATA[$F{fimIntervalo}]]></textFieldExpression>
 								</textField>
@@ -362,7 +387,13 @@
 								<pen lineWidth="0.075"/>
 							</box>
 							<textField>
-								<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="60" height="20" backcolor="#FFFFFF" uuid="72f05116-2771-4559-9d4e-0f65d1e998e9"/>
+								<reportElement style="alternativeColor" mode="Opaque" x="0" y="0" width="60" height="20" uuid="72f05116-2771-4559-9d4e-0f65d1e998e9"/>
+								<box>
+									<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{saida}]]></textFieldExpression>
 							</textField>
@@ -389,7 +420,13 @@
 								<pen lineWidth="0.075"/>
 							</box>
 							<textField>
-								<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="60" height="20" backcolor="#FFFFFF" uuid="a57d63b7-7d88-4159-9ab5-5ac5ab345268"/>
+								<reportElement style="alternativeColor" mode="Opaque" x="0" y="0" width="60" height="20" uuid="a57d63b7-7d88-4159-9ab5-5ac5ab345268"/>
+								<box>
+									<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{credito}]]></textFieldExpression>
 							</textField>
@@ -415,7 +452,13 @@
 								<pen lineWidth="0.075"/>
 							</box>
 							<textField>
-								<reportElement style="alternativeColor" mode="Transparent" x="0" y="0" width="240" height="20" backcolor="#FFFFFF" uuid="b5b2c46c-6665-4401-9a43-0dad2e82d9b8"/>
+								<reportElement style="alternativeColor" mode="Opaque" x="0" y="0" width="240" height="20" uuid="b5b2c46c-6665-4401-9a43-0dad2e82d9b8"/>
+								<box>
+									<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{observacao}]]></textFieldExpression>
 							</textField>

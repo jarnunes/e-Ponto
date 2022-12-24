@@ -25,7 +25,7 @@
                 update="form:toolbarPanelGroup"/>
             <p:commandButton id="download" value="#{msg['relatorio.download']}" ajax="false"
                 styleClass="mr-1" icon="bi bi-download" disabled="#{controller.disableDownload}">
-                <p:fileDownload value="#{relatorioController.file()}"/>
+                <p:fileDownload value="#{relatorioController.file}"/>
             </p:commandButton>
             <p:commandButton id="remove" action="#{controller.remove}" immediate="true" rendered="#{controller.editMode}"
                 styleClass="mr-1" icon="bi bi-trash-fill" disabled="#{controller.disableDownload }"

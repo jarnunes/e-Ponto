@@ -4,8 +4,10 @@ import com.jnunes.core.commons.CommonsUtils;
 import com.jnunes.core.commons.context.StaticContextAccessor;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.domain.Configuracao;
+import com.jnunes.eponto.domain.CreditoMensal;
 import com.jnunes.eponto.domain.DiaTrabalho;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
+import com.jnunes.eponto.service.CreditoMensalServiceImpl;
 import com.jnunes.eponto.support.JornadaTrabalhoUtils;
 import com.jnunes.reports.vo.DiaTrabalhoVO;
 import com.jnunes.reports.vo.RelatorioVO;
@@ -24,6 +26,10 @@ public class RelatorioEponto extends JasperUtils {
 
     private static ConfiguracaoServiceImpl getConfiguracaoService() {
         return StaticContextAccessor.getBean(ConfiguracaoServiceImpl.class);
+    }
+
+    private static CreditoMensalServiceImpl getCreditoMensalService() {
+        return StaticContextAccessor.getBean(CreditoMensalServiceImpl.class);
     }
 
     public static StreamedContent obterStreamedContent(RelatorioVO relatorio, List<DiaTrabalhoVO> diasTrabalho) {
@@ -86,8 +92,11 @@ public class RelatorioEponto extends JasperUtils {
             String dataFormatada = StringUtils.join(DateUtils.monthName(diaTrabalho.getDia()), "/",
                     diaTrabalho.getDia().getYear());
             relatorio.setDataReferencia(dataFormatada);
-            relatorio.setCreditoAtual(JornadaTrabalhoUtils.calcularCreditoTotal(diasTrabalho));
-            relatorio.setCreditoTotal(0.0);
+
+            CreditoMensal cm = getCreditoMensalService().findByDataReferencia(JornadaTrabalhoUtils.primeiraDataDaLista(diasTrabalho),
+                JornadaTrabalhoUtils.ultimaDataDaLista(diasTrabalho));
+            relatorio.setCreditoAtual(cm.getCredito());
+            relatorio.setCreditoTotal(cm.getCreditoAcumulado());
         });
     }
 }
