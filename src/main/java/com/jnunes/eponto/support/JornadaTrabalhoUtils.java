@@ -7,6 +7,8 @@ import com.jnunes.eponto.domain.DiaTrabalho;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 public class JornadaTrabalhoUtils {
@@ -53,6 +55,14 @@ public class JornadaTrabalhoUtils {
         Duration creditoDiario = duracaoTrabalhoDoDia(diaTrabalho).minus(jornadaDiariaConfigurada());
         Duration creditoIntervalo = intervaloDiarioConfigurado().minus(duracaoIntervaloDoDia(diaTrabalho));
         return creditoDiario.plus(creditoIntervalo);
+    }
+
+    public static LocalDate primeiraDataDaLista(List<DiaTrabalho> diasTrablaho){
+        return diasTrablaho.stream().min(Comparator.comparing(DiaTrabalho::getDia)).map(DiaTrabalho::getDia).orElse(null);
+    }
+
+    public static LocalDate ultimaDataDaLista(List<DiaTrabalho> diasTrablaho){
+        return diasTrablaho.stream().max(Comparator.comparing(DiaTrabalho::getDia)).map(DiaTrabalho::getDia).orElse(null);
     }
 
 }

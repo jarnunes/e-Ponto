@@ -25,7 +25,7 @@
                 update="form:toolbarPanelGroup"/>
             <p:commandButton id="download" value="#{msg['relatorio.download']}" ajax="false"
                 styleClass="mr-1" icon="bi bi-download" disabled="#{controller.disableDownload}">
-                <p:fileDownload value="#{relatorioController.obterArquivo()}"/>
+                <p:fileDownload value="#{relatorioController.file()}"/>
             </p:commandButton>
             <p:commandButton id="remove" action="#{controller.remove}" immediate="true" rendered="#{controller.editMode}"
                 styleClass="mr-1" icon="bi bi-trash-fill" disabled="#{controller.disableDownload }"
@@ -45,14 +45,15 @@
         <jn:inputGroupBtnSearch id="data" label="Data" action="#{relatorioController.buscarRelatorio()}"
             styleClass="col-12" update="form:resultPanelGroup form:toolbarPanelGroup" required="true"
             disabled="#{relatorioController.disabled}">
-            <p:datePicker id="dateTime" value="#{relatorioController.form.localDate}" pattern="MM/yyyy" required="true"
-                styleClass=" " disabled="#{relatorioController.disabled}">
+            <p:datePicker id="dateTime" value="#{relatorioController.form.yearMonth}" pattern="MM/yyyy" required="true"
+                          styleClass=" " disabled="#{relatorioController.disabled}">
                 <p:ajax process="@this" immediate="true" global="false" disabled="icon" />
             </p:datePicker>
         </jn:inputGroupBtnSearch>
     </ui:define>
 
     <ui:define name="resultPanel">
+        <c:set var="form" value="${relatorioController.form}"/>
         <p:dataTable var="diaTrabalho" value="#{relatorioController.form.diasTrabalho}"
             emptyMessage="Nenhum registro encontrado!">
 
@@ -80,15 +81,27 @@
             <jt:column id="observacao" value="#{diaTrabalho.observacao}"/>
 
             <p:columnGroup type="footer">
+
                 <p:row>
-                    <p:column colspan="5" style="text-align:right" footerText="Crédito Mês Atual: "/>
+                    <p:column colspan="5" style="text-align:right" footerText="#{msg['relatorio.credito.mes.atual']}"/>
                     <p:column style="text-align: center">
                         <f:facet name="footer">
-                            <h:outputText value="#{relatorioController.getSomatorioCreditoDoRelatorioEmEdicao()}"/>
+                            <h:outputText value="#{form.creditoMensal.credito}"/>
                         </f:facet>
                     </p:column>
                     <p:column colspan="1" style="text-align:right"/>
                 </p:row>
+
+                <p:row>
+                    <p:column colspan="5" style="text-align:right" footerText="#{msg['relatorio.credito.total']}"/>
+                    <p:column style="text-align: center">
+                        <f:facet name="footer">
+                            <h:outputText value="#{form.creditoMensal.creditoAcumulado}"/>
+                        </f:facet>
+                    </p:column>
+                    <p:column colspan="1" style="text-align:right"/>
+                </p:row>
+
             </p:columnGroup>
          </p:dataTable>
 
@@ -101,8 +114,9 @@
 
     <ui:define name="editPanel">
         <c:set var="pageTitle" value="${msg['relatorio.title']}" scope="request"/>
+        <c:set var="form" value="${relatorioController.form}"/>
 
-        <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.form.localDate}" styleClass="col-12">
+        <h:panelGroup id="gerandoRelatorio" rendered="#{not empty relatorioController.form.yearMonth}" styleClass="col-12">
             <p:dataTable id="datatableDiasTrabalho" var="dia" value="#{relatorioController.form.diasTrabalho}"
                          editMode="cell" editable="true" widgetVar="diasTrabalho">
                 <c:set var="disableCellEdit" value="#{controller.disableCellEdit(dia)}" />
@@ -206,16 +220,35 @@
 
                 <p:columnGroup type="footer">
                     <p:row>
-                        <p:column colspan="5" style="text-align:right" footerText="Crédito Mês Atual: "/>
+                        <p:column colspan="5" style="text-align:right" footerText="#{msg['relatorio.credito.mes.atual']}"/>
                         <p:column style="text-align: center">
                             <f:facet name="footer">
-                                <h:outputText value="#{relatorioController.getSomatorioCreditoDoRelatorioEmEdicao()}"/>
+                                <h:outputText value="#{form.creditoMensal.credito}"/>
+                            </f:facet>
+                        </p:column>
+                        <p:column colspan="1" style="text-align:right"/>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="5" style="text-align:right" footerText="#{msg['relatorio.credito.meses.anteriores']}"/>
+                        <p:column style="text-align: center">
+                            <f:facet name="footer">
+                                <h:outputText value="#{form.creditoMesesAnteriores}"/>
+                            </f:facet>
+                        </p:column>
+                        <p:column colspan="1" style="text-align:right"/>
+                    </p:row>
+
+                    <p:row>
+                        <p:column colspan="5" style="text-align:right" footerText="#{msg['relatorio.credito.total']}"/>
+                        <p:column style="text-align: center">
+                            <f:facet name="footer">
+                                <h:outputText value="#{form.creditoMensal.creditoAcumulado}"/>
                             </f:facet>
                         </p:column>
                         <p:column colspan="1" style="text-align:right"/>
                     </p:row>
                 </p:columnGroup>
-
             </p:dataTable>
         </h:panelGroup>
 

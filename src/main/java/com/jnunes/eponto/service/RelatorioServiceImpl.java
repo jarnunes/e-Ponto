@@ -1,16 +1,16 @@
 package com.jnunes.eponto.service;
 
 import com.jnunes.core.commons.ValidationUtils;
+import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.domain.CreditoMensal;
 import com.jnunes.eponto.domain.DiaTrabalho;
-import com.jnunes.eponto.support.JornadaTrabalhoUtils;
 import com.jnunes.springjsf.service.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @Transactional
@@ -20,34 +20,28 @@ public class RelatorioServiceImpl extends BaseServiceImpl<DiaTrabalho> implement
     private RelatorioRepository repository;
 
     @Autowired
-    private CreditoMensalRepository creditoMensalRepository;
+    private CreditoMensalServiceImpl creditoMensalService;
 
     @Override
-    public void save(List<DiaTrabalho> diasTrabalho) {
-        ValidationUtils.validateNonEmpty(diasTrabalho, this::saveNonEmpty);
+    public void save(List<DiaTrabalho> diasTrabalho, CreditoMensal creditoMensal) {
+        ValidationUtils.validateNonEmpty(diasTrabalho, () -> saveNonEmpty(diasTrabalho, creditoMensal));
     }
 
-    private void saveNonEmpty(List<DiaTrabalho> diasTrabalho) {
-        CreditoMensal creditoMensal = new CreditoMensal();
-        creditoMensal.setDataInicioReferencia(diasTrabalho.get(0).getDia());
-        creditoMensal.setDataFimReferencia(diasTrabalho.get(diasTrabalho.size() - 1).getDia());
-        creditoMensal.setCredito(JornadaTrabalhoUtils.somarCreditoDaLista(diasTrabalho));
-        creditoMensalRepository.save(creditoMensal);
+    private void saveNonEmpty(List<DiaTrabalho> diasTrabalho, CreditoMensal creditoMensal) {
+        creditoMensalService.criarCreditoMensalFromDiasTrabalhados(diasTrabalho, creditoMensal);
         diasTrabalho.forEach(this::save);
     }
 
     @Override
     public void remove(List<DiaTrabalho> diasTrabalho) {
-        ValidationUtils.validateNonEmpty(diasTrabalho, this::removeNomEmpty);
+        ValidationUtils.validateNonEmpty(diasTrabalho, this::removeNonEmpty);
     }
 
-    private void removeNomEmpty(List<DiaTrabalho> diasTrabalho){
-        CreditoMensal creditoMensal = creditoMensalRepository.findByDataReferencia(diasTrabalho.get(0).getDia(),
-                diasTrabalho.get(diasTrabalho.size() - 1).getDia());
-        Optional.ofNullable(creditoMensal).ifPresent(creditoM -> creditoMensalRepository.delete(creditoM));
+    private void removeNonEmpty(List<DiaTrabalho> diasTrabalho){
+        List<LocalDate> listaDeDatas = diasTrabalho.stream().map(DiaTrabalho::getDia).toList();
+        creditoMensalService.removeByDataReferencia(DateUtils.firstDayOf(listaDeDatas), DateUtils.lastDayOf(listaDeDatas));
         diasTrabalho.forEach(diaTrabalho -> this.delete(diaTrabalho.getId()));
     }
-
 
     @Override
     public List<DiaTrabalho> findAllByMesAno(Integer mes, Integer ano) {

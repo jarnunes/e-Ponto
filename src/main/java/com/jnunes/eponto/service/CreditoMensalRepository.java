@@ -12,9 +12,9 @@ import java.util.List;
 @Repository
 public interface CreditoMensalRepository extends CrudRepository<CreditoMensal, Long> {
 
-    @Query("from CreditoMensal cm " +
-            " where (dataInicioReferencia >= :dataInicioReferencia) " +
-            "   and (dataFimReferencia  <= :dataFimReferencia) ")
+    @Query("select max(cm) from CreditoMensal cm " +
+            " where (cm.dataInicioReferencia >= :dataInicioReferencia) " +
+            "   and (cm.dataFimReferencia  <= :dataFimReferencia) ")
     CreditoMensal findByDataReferencia(@Param("dataInicioReferencia") LocalDate dataInicioReferencia,
-                                                @Param("dataFimReferencia") LocalDate dataFimReferencia);
+        @Param("dataFimReferencia") LocalDate dataFimReferencia);
 }

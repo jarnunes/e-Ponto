@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/templates/flex-container.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
+
+    <ui:define name="flex-content">
+        <c:set var="pageTitle" value="${msg['dashboard.title']}" scope="request"/>
+        <c:set var="form" value="${dashboardController.form}" />
+
+        <jn:card icon="bi bi-calendar2-range" value="#{form.creditoAtual} hrs" titleKey="dashboard.card.credito.atual" bgColor="#A8B545"/>
+        <jn:card icon="bi bi-database-fill" value="#{form.creditoTotal} hrs" titleKey="dashboard.card.credito.total" bgColor="#919151"/>
+    </ui:define>
+
+</ui:composition>

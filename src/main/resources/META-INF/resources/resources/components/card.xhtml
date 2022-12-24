@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<cc:interface>
+    <cc:attribute name="titleKey"/>
+    <cc:attribute name="title" default="#{empty cc.attrs.titleKey ? cc.attrs.title  : msg[cc.attrs.titleKey]}"/>
+    <cc:attribute name="value" required="true"/>
+    <cc:attribute name="icon" required="true"/>
+    <cc:attribute name="bgColor" />
+
+</cc:interface>
+<cc:implementation>
+
+    <div class="col-12 md:col-4 lg:col-3 mb-3">
+    <p:card styleClass="card-dash" style="background-color: #{empty cc.attrs.bgColor ? '#ffffff' : cc.attrs.bgColor}ad">
+        <f:facet name="title">
+            <h:outputText value="#{cc.attrs.title}" />
+        </f:facet>
+        <h:outputText value="#{cc.attrs.value}" styleClass="font-bold text-gray-900" />
+        <div class="card-icon">
+            <i class="#{cc.attrs.icon}"/>
+        </div>
+    </p:card>
+    </div>
+
+
+    <h:outputStylesheet>
+        div.card-dash {
+            position: relative;
+        }
+
+        div.card-icon {
+            position: absolute;
+            width: 6rem;
+            height: 100%;
+            right: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 0
+        }
+
+        div.card-icon i {
+            font-size: 5rem;
+            color: #00000047;
+        }
+    </h:outputStylesheet>
+</cc:implementation>
+</html>

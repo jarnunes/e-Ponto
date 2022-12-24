@@ -1,9 +1,12 @@
 package com.jnunes.eponto.controller;
 
+import com.jnunes.core.commons.ValidationUtils;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.domain.Configuracao;
+import com.jnunes.eponto.domain.CreditoMensal;
 import com.jnunes.eponto.domain.DiaTrabalho;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
+import com.jnunes.eponto.service.CreditoMensalServiceImpl;
 import com.jnunes.eponto.service.RelatorioServiceImpl;
 import com.jnunes.eponto.support.JornadaTrabalhoUtils;
 import com.jnunes.reports.RelatorioEponto;
@@ -20,6 +23,7 @@ import javax.inject.Named;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +36,9 @@ public class RelatorioController extends BaseController implements Serializable 
     private ConfiguracaoServiceImpl configuracaoService;
     @Autowired
     private RelatorioServiceImpl service;
+    @Autowired
+    private CreditoMensalServiceImpl creditoMensalService;
+
     @Getter
     @Setter
     private Configuracao configuracao;
@@ -48,6 +55,9 @@ public class RelatorioController extends BaseController implements Serializable 
 
     @Getter
     private Boolean habilitarFimDeSemana;
+    @Getter
+    private StreamedContent file;
+
 
     public void beforeInit() {
         configuracao = configuracaoService.obterConfiguracao();
@@ -77,7 +87,7 @@ public class RelatorioController extends BaseController implements Serializable 
     }
 
     public void salvarRelatorio() {
-        service.save(getForm().getDiasTrabalho());
+        service.save(getForm().getDiasTrabalho(), getForm().getCreditoMensal());
         setRelatorioParaDownload();
         addInfoMessage("relatorio.salvo.sucesso");
     }
@@ -89,6 +99,9 @@ public class RelatorioController extends BaseController implements Serializable 
     public void buscarRelatorio() {
         validateNonEmptyOrElse(internalBuscarDiasTrabalho(), this::setInformacoesCasoLocalizadoRegistros,
             this::setInformacoesCasoNaoLocalizadoRegistros);
+        validateNonNullThen(creditoMensalService.findCreditoMesAnterior(getForm().getYearMonth()),
+                creditoMensal -> getForm().setCreditoMesesAnteriores(creditoMensal.getCreditoAcumulado()));
+        calcularCredito();
     }
 
     private void setInformacoesCasoLocalizadoRegistros(List<DiaTrabalho> diasTrabalho){
@@ -98,7 +111,7 @@ public class RelatorioController extends BaseController implements Serializable 
     }
 
     private void setInformacoesCasoNaoLocalizadoRegistros(){
-        addWarningMessage("relatorio.sem.registro.para.data.informada", DateUtils.dateMonthFormat(getForm().getLocalDate()));
+        addWarningMessage("relatorio.sem.registro.para.data.informada", DateUtils.yearMonthFormat(getForm().getYearMonth()));
     }
 
     public void remove(){
@@ -110,30 +123,31 @@ public class RelatorioController extends BaseController implements Serializable 
     }
 
     private List<DiaTrabalho> internalBuscarDiasTrabalho(){
-        return service.findAllByMesAno(getForm().getLocalDate().getMonthValue(), getForm().getLocalDate().getYear());
+        return service.findAllByMesAno(getForm().getYearMonth().getMonthValue(), getForm().getYearMonth().getYear());
     }
 
     private List<DiaTrabalho> criarLista() {
         List<DiaTrabalho> novaLista = new ArrayList<>();
-        DateUtils.daysOfMonth(getForm().getLocalDate().getYear(), getForm().getLocalDate().getMonthValue()).forEach(date -> {
+        DateUtils.daysOfMonth(getForm().getYearMonth()).forEach(date -> {
             DiaTrabalho diaTrabalho = new DiaTrabalho();
             diaTrabalho.setDia(date);
-            diaTrabalho.setHoraEntrada(obterHoraConfiguradaOuMin(date, configuracao.getInicioExpediente()));
-            diaTrabalho.setHoraSaida(obterHoraConfiguradaOuMin(date, configuracao.getFimExpediente()));
-            diaTrabalho.setInicioIntervalo(obterHoraConfiguradaOuMin(date, configuracao.getInicioIntervalo()));
-            diaTrabalho.setFimIntervalo(obterHoraConfiguradaOuMin(date, configuracao.getFimIntervalo()));
+            diaTrabalho.setHoraEntrada(obterHoraConfiguradaOuZeroHora(date, configuracao.getInicioExpediente()));
+            diaTrabalho.setHoraSaida(obterHoraConfiguradaOuZeroHora(date, configuracao.getFimExpediente()));
+            diaTrabalho.setInicioIntervalo(obterHoraConfiguradaOuZeroHora(date, configuracao.getInicioIntervalo()));
+            diaTrabalho.setFimIntervalo(obterHoraConfiguradaOuZeroHora(date, configuracao.getFimIntervalo()));
             diaTrabalho.setCredito(0.0);
             novaLista.add(diaTrabalho);
         });
         return novaLista;
     }
 
-    private LocalTime obterHoraConfiguradaOuMin(LocalDate localDate, LocalTime horaConfigurada) {
+    private LocalTime obterHoraConfiguradaOuZeroHora(LocalDate localDate, LocalTime horaConfigurada) {
         return desabilitarAtributo(localDate) ? LocalTime.MIN : horaConfigurada;
     }
 
     public void onCellEditListener(DiaTrabalho diaTrabalho) {
         diaTrabalho.setCredito(JornadaTrabalhoUtils.calcularCreditoDiario(diaTrabalho));
+        calcularCredito();
     }
 
     public boolean disableCellEdit(DiaTrabalho diaTrabalho){
@@ -143,30 +157,32 @@ public class RelatorioController extends BaseController implements Serializable 
     private boolean desabilitarAtributo(LocalDate localDate){
         return DateUtils.isWeekend(localDate) && !habilitarFimDeSemana;
     }
-    @Getter
-    private StreamedContent file;
 
-    public StreamedContent obterArquivo(){
-        return file;
-    }
     private void setRelatorioParaDownload() {
         disableDownload = getForm().getDiasTrabalho().stream().allMatch(diaTrabalho -> diaTrabalho.getId() == null);
         file = RelatorioEponto.obterRelatorio(getForm().getDiasTrabalho());
     }
 
-    public Double getSomatorioCreditoDoRelatorioEmEdicao() {
-        return JornadaTrabalhoUtils.somarCreditoDaLista(getForm().getDiasTrabalho());
+    public void calcularCredito(){
+        getForm().getCreditoMensal().setCredito(JornadaTrabalhoUtils.somarCreditoDaLista(getForm().getDiasTrabalho()));
+        getForm().getCreditoMensal().setCreditoAcumulado(getForm().getCreditoMesesAnteriores() + getForm().getCreditoMensal().getCredito());
     }
+
 
     @Getter
     @Setter
     public static class Form {
-        private LocalDate localDate;
+        private YearMonth yearMonth;
         private List<DiaTrabalho> diasTrabalho;
+        private CreditoMensal creditoMensal;
+        private Double creditoMesesAnteriores;
+
 
         public Form(){
             this.diasTrabalho = new ArrayList<>();
-            this.localDate = null;
+            this.creditoMensal = new CreditoMensal();
+            this.yearMonth = null;
+            this.creditoMesesAnteriores = 0.0;
         }
     }
 

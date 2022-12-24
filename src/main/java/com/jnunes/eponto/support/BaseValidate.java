@@ -19,6 +19,9 @@ public abstract class BaseValidate {
         ValidationUtils.validateNull(object, action);
     }
 
+    protected <T>void validateNonNullThen(T object, Consumer<T> consumer){
+        ValidationUtils.validateNonNullThen(object, consumer);
+    }
     protected void validateNonEmpty(Collection<?> collection, Runnable action) {
         validate(CollectionUtils.isNotEmpty(collection), action);
     }

@@ -23,7 +23,14 @@ public class CreditoMensal extends BaseEntity {
     @Column(nullable = false)
     private Double credito;
 
+    @Column(nullable = false)
+    private Double creditoAcumulado;
+
     public void setCredito(Double credito) {
         this.credito = CommonsUtils.setScale(credito);
+    }
+
+    public void setCreditoAcumulado(Double credito){
+        this.creditoAcumulado = CommonsUtils.setScale(credito);
     }
 }
