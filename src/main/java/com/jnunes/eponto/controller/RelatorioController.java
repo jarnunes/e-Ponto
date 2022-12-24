@@ -1,6 +1,5 @@
 package com.jnunes.eponto.controller;
 
-import com.jnunes.core.commons.ValidationUtils;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.domain.Configuracao;
 import com.jnunes.eponto.domain.CreditoMensal;
