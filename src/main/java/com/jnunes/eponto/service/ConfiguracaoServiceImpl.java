@@ -21,6 +21,9 @@ public class ConfiguracaoServiceImpl extends BaseCrudServiceImpl<Configuracao> i
     }
 
     @Override
+    public void delete(Configuracao entity) {}
+
+    @Override
     public Configuracao obterConfiguracao() {
         return StreamSupport.stream(repository.findAll().spliterator(), Boolean.FALSE)
             .findFirst().orElse(new Configuracao());

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/user/base.xhtml" xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui" xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jt="https://jnunes.com/jsf/facelets"
+                xmlns:jn="http://xmlns.jcp.org/jsf/composite/resources/components">
+
+    <ui:define name="container">
+        <div class="col-12">
+            <p:inputText id="email" type="email" placeholder="E-mail" label="Email" styleClass="col-12"/>
+            <small class="text-muted">Informe o e-mail cadastrado para receber uma nova senha!</small>
+        </div>
+        <div class="col-12">
+            <p:commandButton id="confirm" value="Enviar" styleClass="col-12 p-0"/>
+        </div>
+        <div class="col-12">
+            <a href="${pageContext.request.contextPath}/login.jsf">Voltar à tela de login.</a>
+        </div>
+
+        <h:outputStylesheet>
+            small.text-muted {
+                color: rgba(33, 37, 41, 0.75);
+            }
+        </h:outputStylesheet>
+    </ui:define>
+
+
+</ui:composition>

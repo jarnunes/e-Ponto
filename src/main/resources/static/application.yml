@@ -1,0 +1,40 @@
+
+spring:
+  application:
+    name: e-Ponto
+  profiles:
+    active: dev
+
+  datasource:
+#    url: ${crudveiculos.dburl}
+#    username: ${crudveiculos.dbusername}
+#    password: ${crudveiculos.dbpassword}
+#    driverClassName: org.postgresql.Driver
+    url:  jdbc:hsqldb:hsql://localhost/eponto
+    username: 'sa'
+    password: ''
+    driverClassName: org.hsqldb.jdbc.JDBCDriver
+
+#  jpa:
+#    properties:
+#      hibernate:
+#        ddl-auto: update
+#        show_sql: true
+#        hbm2ddl:
+#          auto: update
+
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: update
+        show_sql: true
+        hbm2ddl:
+          auto: update
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+server:
+  port: 5000

@@ -4,10 +4,28 @@
 
     <nav class="menu">
         <!-- menu -->
-        <div class="menu-container" style="">
-            <lt:menuitem id="dashboard" url="/dashboard/dashboard.jsf" icon="bi bi-stack" title="Dashboard" />
-            <lt:menuitem id="relatorio" url="/relatorio/relatorio.jsf" icon="bi bi-file-earmark-text" title="Relatório" />
-            <lt:menuitem id="configuracao" url="/configuracao/configuracao.jsf" icon="bi bi-sliders" title="Configuração" />
+        <div class="menu-container">
+            <lt:menuitem id="dashboard" url="/dashboard/dashboard.jsf" icon="bi bi-stack" title="Dashboard"/>
+            <lt:menuitem id="relatorio" url="/relatorio/relatorio.jsf" icon="bi bi-file-earmark-text"
+                         title="Relatório"/>
+            <lt:menuitem id="configuracao" url="/configuracao/configuracao.jsf" icon="bi bi-sliders"
+                         title="Configuração"/>
+        </div>
+
+        <div class="bottom-menu">
+            <a href="#{request.contextPath}/logout"><i class="bi bi-box-arrow-left"/></a>
         </div>
     </nav>
+
+    <style>
+        .bottom-menu {
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            bottom: 1.5em;
+            width: var(--nav-width);
+        }
+
+
+    </style>
 </ui:composition>
