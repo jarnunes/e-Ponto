@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -41,8 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                     .formLogin()
                     .loginPage("/login.jsf").loginProcessingUrl("/login").defaultSuccessUrl("/dashboard/dashboard.jsf")
-                    .permitAll()
-                    .and().logout().permitAll();
+                    .successForwardUrl("/dashboard/dashboard.jsf").permitAll().and().logout().permitAll();
         }
     }
 
