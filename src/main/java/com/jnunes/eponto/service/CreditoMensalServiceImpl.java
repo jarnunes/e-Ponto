@@ -1,6 +1,6 @@
 package com.jnunes.eponto.service;
 
-import com.jnunes.core.commons.ValidationUtils;
+import com.jnunes.core.commons.ValidateUtils;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.model.CreditoMensal;
 import com.jnunes.eponto.model.DiaTrabalho;
@@ -24,27 +24,27 @@ public class CreditoMensalServiceImpl extends BaseServiceImpl<CreditoMensal> imp
 
     @Override
     public void criarCreditoMensalFromDiasTrabalhados(List<DiaTrabalho> diasTrabalho, CreditoMensal creditoMensal) {
-        ValidationUtils.validateNonEmpty(diasTrabalho, ()-> saveNonEmpty(diasTrabalho, creditoMensal));
+        ValidateUtils.ifListNonEmpty(diasTrabalho, () -> saveNonEmpty(diasTrabalho, creditoMensal));
     }
 
     private void saveNonEmpty(List<DiaTrabalho> diasTrabalho, CreditoMensal creditoMensal) {
         creditoMensal.setDataInicioReferencia(JornadaTrabalhoUtils.primeiraDataDaLista(diasTrabalho));
         creditoMensal.setDataFimReferencia(JornadaTrabalhoUtils.ultimaDataDaLista(diasTrabalho));
-        ValidationUtils.validateNonNullOrElse(
+        ValidateUtils.ifNonNullElse(
                 findByDataReferencia(creditoMensal.getDataInicioReferencia(), creditoMensal.getDataFimReferencia()),
                 creditoAtual -> atualizarCreditoExistente(creditoMensal, creditoAtual),
                 () -> repository.save(creditoMensal));
     }
 
-    private void atualizarCreditoExistente(CreditoMensal novoCredito, CreditoMensal creditoAtual){
+    private void atualizarCreditoExistente(CreditoMensal novoCredito, CreditoMensal creditoAtual) {
         creditoAtual.setCredito(novoCredito.getCredito());
         creditoAtual.setCreditoAcumulado(novoCredito.getCreditoAcumulado());
         repository.save(creditoAtual);
     }
 
     @Override
-    public CreditoMensal findByDataReferencia(LocalDate inicioReferencia, LocalDate fimReferencia){
-        return  repository.findByDataReferencia(inicioReferencia, fimReferencia);
+    public CreditoMensal findByDataReferencia(LocalDate inicioReferencia, LocalDate fimReferencia) {
+        return repository.findByDataReferencia(inicioReferencia, fimReferencia);
     }
 
     @Override

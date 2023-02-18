@@ -51,7 +51,7 @@ public class RelatorioEponto extends JasperUtils {
     }
 
     public static StreamedContent obterRelatorio(List<DiaTrabalho> diasTrabalho) {
-        return validateNonEmptyThenGetValue(StreamedContent.class, diasTrabalho,
+        return ifListNonEmptyThenGet(StreamedContent.class, diasTrabalho,
             () -> internalObterRelatorio(diasTrabalho));
     }
 
@@ -60,7 +60,7 @@ public class RelatorioEponto extends JasperUtils {
         setInformacoesComplementares(vo, diasTrabalho);
 
         List<DiaTrabalhoVO> diasTrabalhoVO = new ArrayList<>();
-        validateOrElse(getConfiguracaoService().obterConfiguracao().getHabilitarFimDeSemana(),
+        ifElse(getConfiguracaoService().obterConfiguracao().getHabilitarFimDeSemana(),
             () -> diasTrabalhoVO.addAll(criarListaDiaTrabalhoVO(diasTrabalho)),
             () -> diasTrabalhoVO.addAll(criarListaDiaTrabalhoVOFimDeSemana(diasTrabalho)));
         return obterStreamedContent(vo, diasTrabalhoVO);

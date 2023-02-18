@@ -1,6 +1,6 @@
 package com.jnunes.eponto.service;
 
-import com.jnunes.core.commons.ValidationUtils;
+import com.jnunes.core.commons.ValidateUtils;
 import com.jnunes.core.commons.utils.DateUtils;
 import com.jnunes.eponto.model.CreditoMensal;
 import com.jnunes.eponto.model.DiaTrabalho;
@@ -24,7 +24,7 @@ public class RelatorioServiceImpl extends BaseServiceImpl<DiaTrabalho> implement
 
     @Override
     public void save(List<DiaTrabalho> diasTrabalho, CreditoMensal creditoMensal) {
-        ValidationUtils.validateNonEmpty(diasTrabalho, () -> saveNonEmpty(diasTrabalho, creditoMensal));
+        ValidateUtils.ifListNonEmpty(diasTrabalho, () -> saveNonEmpty(diasTrabalho, creditoMensal));
     }
 
     private void saveNonEmpty(List<DiaTrabalho> diasTrabalho, CreditoMensal creditoMensal) {
@@ -34,7 +34,7 @@ public class RelatorioServiceImpl extends BaseServiceImpl<DiaTrabalho> implement
 
     @Override
     public void remove(List<DiaTrabalho> diasTrabalho) {
-        ValidationUtils.validateNonEmpty(diasTrabalho, this::removeNonEmpty);
+        ValidateUtils.ifListNonEmpty(diasTrabalho, this::removeNonEmpty);
     }
 
     private void removeNonEmpty(List<DiaTrabalho> diasTrabalho){

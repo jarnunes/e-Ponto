@@ -1,8 +1,5 @@
 package com.jnunes.user.controller;
 
-import com.jnunes.eponto.support.Utils;
-import com.jnunes.springjsf.support.utils.JSFUtils;
-import com.jnunes.user.model.Role;
 import com.jnunes.user.model.User;
 import com.jnunes.user.service.UserService;
 import lombok.Getter;

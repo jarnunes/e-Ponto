@@ -1,6 +1,5 @@
 package com.jnunes.user.service;
 
-import com.jnunes.eponto.support.UIException;
 import com.jnunes.springjsf.support.utils.JSFUtils;
 import com.jnunes.user.model.User;
 import com.jnunes.user.repository.UserRepository;

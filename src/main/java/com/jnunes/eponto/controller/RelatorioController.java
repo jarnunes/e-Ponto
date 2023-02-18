@@ -60,7 +60,7 @@ public class RelatorioController extends BaseController implements Serializable 
 
     public void beforeInit() {
         configuracao = configuracaoService.obterConfiguracao();
-        validateNull(configuracao.getId(), () -> {
+        ifNull(configuracao.getId(), () -> {
             addErrorMessage("configuracao.empty");
             disabled = Boolean.TRUE;
         });
@@ -92,13 +92,13 @@ public class RelatorioController extends BaseController implements Serializable 
     }
 
     private void setDiasTrabalho() {
-        validateEmpty(getForm().getDiasTrabalho(), () -> getForm().setDiasTrabalho(criarLista()));
+        ifListEmpty(getForm().getDiasTrabalho(), () -> getForm().setDiasTrabalho(criarLista()));
     }
 
     public void buscarRelatorio() {
-        validateNonEmptyOrElse(internalBuscarDiasTrabalho(), this::setInformacoesCasoLocalizadoRegistros,
+        ifListNonEmptyOrElse(internalBuscarDiasTrabalho(), this::setInformacoesCasoLocalizadoRegistros,
             this::setInformacoesCasoNaoLocalizadoRegistros);
-        validateNonNullThen(creditoMensalService.findCreditoMesAnterior(getForm().getYearMonth()),
+        ifNonNull(creditoMensalService.findCreditoMesAnterior(getForm().getYearMonth()),
                 creditoMensal -> getForm().setCreditoMesesAnteriores(creditoMensal.getCreditoAcumulado()));
         calcularCredito();
     }

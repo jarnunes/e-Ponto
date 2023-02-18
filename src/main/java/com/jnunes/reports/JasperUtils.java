@@ -1,8 +1,7 @@
 package com.jnunes.reports;
 
 import com.jnunes.core.commons.MediaType;
-import com.jnunes.core.commons.ValidationUtils;
-import com.jnunes.eponto.support.BaseValidate;
+import com.jnunes.core.commons.ValidateUtils;
 import com.jnunes.eponto.support.EpontoException;
 import com.jnunes.springjsf.support.utils.PFUtils;
 import net.sf.jasperreports.engine.*;
@@ -17,9 +16,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.jnunes.reports.ReportConsts.*;
+import static com.jnunes.reports.ReportConsts.BASE_REPORTS_PATH;
 
-public class JasperUtils extends ValidationUtils {
+public class JasperUtils extends ValidateUtils {
 
     protected static JRBeanCollectionDataSource dataSource =
             new JRBeanCollectionDataSource(Collections.singletonList(new Object()));
