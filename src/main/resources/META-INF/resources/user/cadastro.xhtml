@@ -8,35 +8,50 @@
 
 
     <ui:define name="container">
+        <h:form id="form">
+            <c:set var="controller" value="#{registerController}"/>
+            <c:set var="form" value="#{controller.form}"/>
+            <div class="col-12">
+                <p:inputText id="nome" type="text" placeholder="Nome" label="Nome" styleClass="col-12"
+                             value="#{form.firstName}"/>
+            </div>
+            <div class="col-12">
+                <p:inputText id="lastName" type="text" placeholder="Sobrenome" label="lastName" styleClass="col-12"
+                             value="#{form.lastName}"/>
+            </div>
 
-        <div class="col-12">
-            <p:inputText id="nome" type="text" placeholder="Nome" label="Nome" styleClass="col-12"/>
-        </div>
+            <div class="col-12">
+                <p:inputText id="email" type="email" placeholder="E-mail" label="Email" styleClass="col-12"
+                             value="#{form.email}"/>
+            </div>
 
-        <div class="col-12">
-            <p:inputText id="email" type="email" placeholder="E-mail" label="Email" styleClass="col-12"/>
-        </div>
+            <div class="col-12">
+                <p:inputText id="email2" type="email" placeholder="Confirmar e-mail" label="Confirmar e-mail"
+                             styleClass="col-12" value="#{form.email}"/>
+            </div>
 
-        <div class="col-12">
-            <p:inputText id="email2" type="email" placeholder="Confirmar e-mail" label="Confirmar e-mail" styleClass="col-12"/>
-        </div>
+            <div class="col-12">
+                <p:inputText id="password" type="password" placeholder="Senha" label="Senha" styleClass="col-12"
+                             value="#{form.password}"/>
+            </div>
 
-        <div class="col-12">
-            <p:inputText id="password" type="password" placeholder="Senha" label="Senha" styleClass="col-12"/>
-        </div>
+            <div class="col-12">
+                <p:inputText id="password2" type="password" placeholder="Confirmar senha" label="Confirmar senha"
+                             styleClass="col-12" value="#{form.password}"/>
+            </div>
 
-        <div class="col-12">
-            <p:inputText id="password2" type="password" placeholder="Confirmar senha" label="Confirmar senha" styleClass="col-12"/>
-        </div>
+            <div class="col-12">
+                <p:commandButton id="confirm" value="Confirmar" styleClass="col-12 p-0" action="#{controller.save()}"
+                                 update="@form"/>
+            </div>
 
-        <div class="col-12">
-            <p:commandButton id="confirm" value="Confirmar" styleClass="col-12 p-0"/>
-        </div>
-
-        <div class="col-12">
+            <div class="col-12">
                  <span>
                      Já possui uma conta? <a href="${pageContext.request.contextPath}/login.jsf">Faça login.</a>
                  </span>
-        </div>
+            </div>
+        </h:form>
+
+
     </ui:define>
 </ui:composition>

@@ -1,7 +1,7 @@
 package com.jnunes.reports.vo;
 
 import com.jnunes.core.commons.utils.DateUtils;
-import com.jnunes.eponto.domain.DiaTrabalho;
+import com.jnunes.eponto.model.DiaTrabalho;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 
 @Getter
 @Setter

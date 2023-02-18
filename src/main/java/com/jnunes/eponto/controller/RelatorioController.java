@@ -1,9 +1,9 @@
 package com.jnunes.eponto.controller;
 
 import com.jnunes.core.commons.utils.DateUtils;
-import com.jnunes.eponto.domain.Configuracao;
-import com.jnunes.eponto.domain.CreditoMensal;
-import com.jnunes.eponto.domain.DiaTrabalho;
+import com.jnunes.eponto.model.Configuracao;
+import com.jnunes.eponto.model.CreditoMensal;
+import com.jnunes.eponto.model.DiaTrabalho;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.eponto.service.CreditoMensalServiceImpl;
 import com.jnunes.eponto.service.RelatorioServiceImpl;

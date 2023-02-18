@@ -2,8 +2,8 @@ package com.jnunes.eponto.service;
 
 import com.jnunes.core.commons.ValidationUtils;
 import com.jnunes.core.commons.utils.DateUtils;
-import com.jnunes.eponto.domain.CreditoMensal;
-import com.jnunes.eponto.domain.DiaTrabalho;
+import com.jnunes.eponto.model.CreditoMensal;
+import com.jnunes.eponto.model.DiaTrabalho;
 import com.jnunes.springjsf.service.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.jnunes.eponto.controller;
 
-import com.jnunes.eponto.domain.Configuracao;
+import com.jnunes.eponto.model.Configuracao;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 import com.jnunes.springjsf.controller.BaseCrudController;
 import com.jnunes.springjsf.support.utils.JSFUtils;

@@ -2,8 +2,8 @@ package com.jnunes.eponto.support;
 
 import com.jnunes.core.commons.context.StaticContextAccessor;
 import com.jnunes.core.commons.utils.DateUtils;
-import com.jnunes.eponto.domain.Configuracao;
-import com.jnunes.eponto.domain.DiaTrabalho;
+import com.jnunes.eponto.model.Configuracao;
+import com.jnunes.eponto.model.DiaTrabalho;
 import com.jnunes.eponto.service.ConfiguracaoServiceImpl;
 
 import java.time.Duration;

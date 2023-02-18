@@ -1,4 +1,4 @@
-package com.jnunes.eponto.domain;
+package com.jnunes.eponto.model;
 
 import com.jnunes.core.commons.CommonsUtils;
 import com.jnunes.core.domain.BaseEntity;
@@ -8,29 +8,33 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 @Entity
-public class CreditoMensal extends BaseEntity {
+public class DiaTrabalho extends BaseEntity {
 
     @Column(nullable = false)
-    private LocalDate dataInicioReferencia;
+    private LocalDate dia;
 
     @Column(nullable = false)
-    private LocalDate dataFimReferencia;
+    private LocalTime horaEntrada;
 
     @Column(nullable = false)
+    private LocalTime horaSaida;
+
+    @Column(nullable = false)
+    private LocalTime inicioIntervalo;
+
+    @Column(nullable = false)
+    private LocalTime fimIntervalo;
+
     private Double credito;
 
-    @Column(nullable = false)
-    private Double creditoAcumulado;
+    private String observacao;
 
     public void setCredito(Double credito) {
         this.credito = CommonsUtils.setScale(credito);
-    }
-
-    public void setCreditoAcumulado(Double credito){
-        this.creditoAcumulado = CommonsUtils.setScale(credito);
     }
 }

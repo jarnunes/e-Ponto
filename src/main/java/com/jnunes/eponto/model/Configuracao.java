@@ -1,4 +1,4 @@
-package com.jnunes.eponto.domain;
+package com.jnunes.eponto.model;
 
 import com.jnunes.core.domain.BaseEntity;
 import lombok.Getter;

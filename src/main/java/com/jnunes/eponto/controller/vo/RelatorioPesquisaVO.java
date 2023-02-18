@@ -1,6 +1,6 @@
 package com.jnunes.eponto.controller.vo;
 
-import com.jnunes.eponto.domain.DiaTrabalho;
+import com.jnunes.eponto.model.DiaTrabalho;
 import com.jnunes.eponto.support.JornadaTrabalhoUtils;
 import lombok.Getter;
 import lombok.Setter;

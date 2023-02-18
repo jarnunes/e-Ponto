@@ -1,6 +1,6 @@
 package com.jnunes.eponto.service;
 
-import com.jnunes.eponto.domain.Configuracao;
+import com.jnunes.eponto.model.Configuracao;
 import com.jnunes.springjsf.service.BaseCrudServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

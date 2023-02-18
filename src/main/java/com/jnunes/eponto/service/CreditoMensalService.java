@@ -1,7 +1,7 @@
 package com.jnunes.eponto.service;
 
-import com.jnunes.eponto.domain.CreditoMensal;
-import com.jnunes.eponto.domain.DiaTrabalho;
+import com.jnunes.eponto.model.CreditoMensal;
+import com.jnunes.eponto.model.DiaTrabalho;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
